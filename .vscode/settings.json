@@ -1,0 +1,35 @@
+{
+    "idf.eimIdfJsonPath": "C:\\Espressif\\tools\\eim_idf.json",
+    "idf.currentSetup": "D:\\esp\\v6.1\\esp-idf",
+    "idf.espIdfPathWin": "D:\\esp\\v6.1\\esp-idf",
+    "idf.toolsPathWin": "D:\\Espressif\\tools",
+    "idf.pythonInstallPath": "D:\\Espressif\\tools\\python\\v6.1\\venv\\Scripts\\python.exe",
+    "idf.customExtraVars": {
+        "IDF_PATH": "D:\\esp\\v6.1\\esp-idf",
+        "IDF_TOOLS_PATH": "D:\\Espressif\\tools",
+        "IDF_TARGET": "esp32p4",
+        "ESP_ROM_ELF_DIR": "D:\\Espressif\\tools\\esp-rom-elfs\\20241011",
+        "PYTHONUTF8": "1"
+    },
+    "C_Cpp.default.compileCommands": "${workspaceFolder}/build/compile_commands.json",
+    "C_Cpp.default.configurationProvider": "espressif.esp-idf-extension",
+    "C_Cpp.intelliSenseEngine": "default",
+    "C_Cpp.intelliSenseUpdateDelay": 500,
+    "files.associations": {
+        "*.h": "c",
+        "*.c": "c"
+    },
+    "idf.flashType": "UART",
+    "idf.port": "COM3",
+    "idf.monitorPort": "COM3",
+    "idf.monitorBaudRate": "115200",
+    "idf.flashBaudRate": "460800",
+    "idf.saveBeforeBuild": true,
+    "clangd.path": "D:\\Espressif\\tools\\esp-clangd\\esp-21.1.3_20260408\\esp-clangd\\bin\\clangd.exe",
+    "clangd.arguments": [
+      "--background-index",
+      "--query-driver=**",
+      "--compile-commands-dir=${workspaceFolder}/build"
+    ],
+    "git.ignoreLimitWarning": true
+}

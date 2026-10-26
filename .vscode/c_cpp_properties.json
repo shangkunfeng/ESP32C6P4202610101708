@@ -1,0 +1,79 @@
+{
+    "configurations": [
+        {
+            "name": "ESP-IDF",
+            "cStandard": "gnu17",
+            "intelliSenseMode": "linux-gcc-x64",
+            "compileCommands": "${workspaceFolder}/build/compile_commands.json",
+            "includePath": [
+                "${workspaceFolder}/main",
+                "${workspaceFolder}/main/Application",
+                "${workspaceFolder}/main/Board",
+                "${workspaceFolder}/main/Common",
+                "${workspaceFolder}/main/Config",
+                "${workspaceFolder}/main/Driver/lcd",
+                "${workspaceFolder}/main/Driver/touch",
+                "${workspaceFolder}/main/Driver/sd_tf",
+                "${workspaceFolder}/main/Driver/co2",
+                "${workspaceFolder}/main/Driver/temp",
+                "${workspaceFolder}/main/Driver/hum",
+                "${workspaceFolder}/main/Driver/rpm",
+                "${workspaceFolder}/main/Middleware",
+                "${workspaceFolder}/main/Middleware/lv_port",
+                "${workspaceFolder}/main/Platform",
+                "${workspaceFolder}/main/Platform/ui_lvgl/ui_common",
+                "${workspaceFolder}/main/Platform/ui_lvgl/ui_home",
+                "${workspaceFolder}/main/Platform/ui_lvgl/ui_wifi",
+                "${workspaceFolder}/build/config",
+                "${workspaceFolder}/managed_components/lvgl__lvgl",
+                "${workspaceFolder}/managed_components/lvgl__lvgl/include",
+                "${workspaceFolder}/managed_components/espressif__esp_wifi_remote/include",
+                "${workspaceFolder}/managed_components/espressif__esp_hosted/host/host_include",
+                "${workspaceFolder}/managed_components/espressif__esp_hosted/host/api/include",
+                "D:/esp/v6.1/esp-idf/components/**",
+                "D:/esp/v6.1/esp-idf/components/esp_common/include",
+                "D:/esp/v6.1/esp-idf/components/esp_hw_support/include",
+                "D:/esp/v6.1/esp-idf/components/esp_system/include",
+                "D:/esp/v6.1/esp-idf/components/esp_rom/include",
+                "D:/esp/v6.1/esp-idf/components/esp_timer/include",
+                "D:/esp/v6.1/esp-idf/components/log/include",
+                "D:/esp/v6.1/esp-idf/components/esp_event/include",
+                "D:/esp/v6.1/esp-idf/components/esp_netif/include",
+                "D:/esp/v6.1/esp-idf/components/esp_wifi/include",
+                "D:/esp/v6.1/esp-idf/components/esp_wifi/remote/include",
+                "D:/esp/v6.1/esp-idf/components/esp_wifi/remote/include/injected",
+                "D:/esp/v6.1/esp-idf/components/nvs_flash/include",
+                "D:/esp/v6.1/esp-idf/components/lwip/include",
+                "D:/esp/v6.1/esp-idf/components/lwip/lwip/src/include",
+                "D:/esp/v6.1/esp-idf/components/lwip/port/include",
+                "D:/esp/v6.1/esp-idf/components/lwip/port/freertos/include",
+                "D:/esp/v6.1/esp-idf/components/freertos/config/include",
+                "D:/esp/v6.1/esp-idf/components/freertos/config/include/freertos",
+                "D:/esp/v6.1/esp-idf/components/freertos/config/riscv/include",
+                "D:/esp/v6.1/esp-idf/components/freertos/FreeRTOS-Kernel/include",
+                "D:/esp/v6.1/esp-idf/components/freertos/esp_additions/include",
+                "D:/esp/v6.1/esp-idf/components/esp_driver_gpio/include",
+                "D:/esp/v6.1/esp-idf/components/esp_driver_ledc/include",
+                "D:/esp/v6.1/esp-idf/components/esp_driver_i2c/include",
+                "D:/esp/v6.1/esp-idf/components/esp_driver_sdmmc/include",
+                "D:/esp/v6.1/esp-idf/components/soc/esp32p4/include",
+                "D:/esp/v6.1/esp-idf/components/hal/include",
+                "D:/esp/v6.1/esp-idf/components/hal/esp32p4/include",
+                "D:/esp/v6.1/esp-idf/components/esp_libc/platform_include"
+            ],
+            "defines": [
+                "ESP_PLATFORM=1",
+                "CONFIG_IDF_TARGET_ESP32P4=1",
+                "CONFIG_ESP_WIFI_REMOTE_ENABLED=1"
+            ],
+            "browse": {
+                "path": [
+                    "${workspaceFolder}",
+                    "D:/esp/v6.1/esp-idf/components"
+                ],
+                "limitSymbolsToIncludedHeaders": true
+            }
+        }
+    ],
+    "version": 4
+}

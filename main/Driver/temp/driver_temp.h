@@ -1,0 +1,26 @@
+#ifndef __DRIVER_TEMP_H__
+#define __DRIVER_TEMP_H__
+#include <stdio.h>
+#include <stdbool.h>
+
+typedef struct
+{
+    bool En; //是否使能
+    uint8_t Hysteresis; //回差
+    uint8_t Alarm_High; //高报警上限
+    uint8_t Alarm_Low;  //低报警上限
+    uint8_t PID_P_Value; //比例系数
+    uint8_t PID_I_Value; //积分系数
+    uint8_t PID_D_Value; //微分系数
+    uint8_t PID_Max_Value; //PID输出最大值
+    uint16_t Run_Time_Hour; //运行时间小时
+    uint16_t Run_Time_Minute; //运行时间分钟
+    
+    float Temp_Set_Value; //设定CO2浓度
+    float Temp_Real_Value; //实时温度值
+
+}temp_structCtrl_t;
+
+volatile extern temp_structCtrl_t temp_struct;
+
+#endif

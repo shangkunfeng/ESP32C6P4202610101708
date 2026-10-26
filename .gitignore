@@ -1,0 +1,9 @@
+build/
+sdkconfig
+sdkconfig.old
+dependencies.lock
+managed_components/
+.vscode/.cache/
+
+# 厂商资料包体积过大，保留在本地即可
+资料/

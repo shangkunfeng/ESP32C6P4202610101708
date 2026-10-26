@@ -1,0 +1,44 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "idf: flash COM5 (fallback)",
+            "type": "shell",
+            "command": "idf.py",
+            "args": [
+                "-p",
+                "COM5",
+                "flash"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}",
+                "env": {
+                    "IDF_PATH": "D:\\ESP-IDF",
+                    "IDF_TOOLS_PATH": "C:\\Users\\22139\\.espressif"
+                }
+            },
+            "problemMatcher": [],
+            "group": "none"
+        },
+        {
+            "label": "idf: flash monitor COM5 (fallback)",
+            "type": "shell",
+            "command": "idf.py",
+            "args": [
+                "-p",
+                "COM5",
+                "flash",
+                "monitor"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}",
+                "env": {
+                    "IDF_PATH": "D:\\ESP-IDF",
+                    "IDF_TOOLS_PATH": "C:\\Users\\22139\\.espressif"
+                }
+            },
+            "problemMatcher": [],
+            "group": "none"
+        }
+    ]
+}
