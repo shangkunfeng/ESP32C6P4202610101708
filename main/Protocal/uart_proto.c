@@ -31,6 +31,7 @@ static uart_proto_ui_notify_fn s_ui_notify;
 static esp_err_t uart_proto_ensure_uart(void)
 {
 <<<<<<< HEAD
+<<<<<<< HEAD
     if (!driver_uart_is_inited()) 
     {
         esp_err_t err = driver_uart_init();
@@ -42,12 +43,17 @@ static esp_err_t uart_proto_ensure_uart(void)
     }
 
 =======
+=======
+>>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
     if (!driver_uart_is_inited()) {
         esp_err_t err = driver_uart_init();
         if (err != ESP_OK) {
             return err;
         }
     }
+<<<<<<< HEAD
+>>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
+=======
 >>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
     return ESP_OK;
 }
@@ -67,8 +73,12 @@ static void uart_proto_notify_ui(void)
 static esp_err_t uart_proto_dispatch_frame(const uart_proto_frame_t *frame)
 {
 <<<<<<< HEAD
+<<<<<<< HEAD
     if (!frame) 
     {
+=======
+    if (!frame) {
+>>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
 =======
     if (!frame) {
 >>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
@@ -119,6 +129,7 @@ static void uart_proto_rx_task(void *arg)
     uint8_t chunk[UART_PROTO_RX_CHUNK];
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     while (s_rx_run) 
     {
         size_t n = 0;
@@ -138,6 +149,8 @@ static void uart_proto_rx_task(void *arg)
             if (ready) 
             {
 =======
+=======
+>>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
     while (s_rx_run) {
         size_t n = 0;
         esp_err_t err = driver_uart_read(chunk, sizeof(chunk), &n, pdMS_TO_TICKS(50));
@@ -150,6 +163,9 @@ static void uart_proto_rx_task(void *arg)
             bool ready = false;
             uart_proto_frame_feed(&chunk[i], 1, &frame, &ready);
             if (ready) {
+<<<<<<< HEAD
+>>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
+=======
 >>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
                 uart_proto_dispatch_frame(&frame);
             }
@@ -162,6 +178,7 @@ static void uart_proto_rx_task(void *arg)
 
 esp_err_t uart_proto_init(void)
 {
+<<<<<<< HEAD
 <<<<<<< HEAD
     if (s_inited) 
     {
@@ -176,6 +193,8 @@ esp_err_t uart_proto_init(void)
     }
 
 =======
+=======
+>>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
     if (s_inited) {
         return ESP_ERR_INVALID_STATE;
     }
@@ -183,6 +202,9 @@ esp_err_t uart_proto_init(void)
     if (err != ESP_OK) {
         ESP_LOGW(TAG, "uart driver: %s", esp_err_to_name(err));
     }
+<<<<<<< HEAD
+>>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
+=======
 >>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
     uart_proto_frame_parser_reset();
     s_inited = true;
@@ -203,6 +225,7 @@ esp_err_t uart_proto_deinit(void)
 esp_err_t uart_proto_start(void)
 {
 <<<<<<< HEAD
+<<<<<<< HEAD
     if (!s_inited)
     {
         return ESP_ERR_INVALID_STATE;
@@ -211,10 +234,15 @@ esp_err_t uart_proto_start(void)
     if (s_rx_task) 
     {
 =======
+=======
+>>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
     if (!s_inited) {
         return ESP_ERR_INVALID_STATE;
     }
     if (s_rx_task) {
+<<<<<<< HEAD
+>>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
+=======
 >>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
         return ESP_OK;
     }
@@ -223,8 +251,12 @@ esp_err_t uart_proto_start(void)
     BaseType_t ok = xTaskCreate(uart_proto_rx_task, "uart_proto", UART_PROTO_RX_TASK_STACK, NULL,
                                 UART_PROTO_RX_TASK_PRIO, &s_rx_task);
 <<<<<<< HEAD
+<<<<<<< HEAD
     if (ok != pdPASS) 
     {
+=======
+    if (ok != pdPASS) {
+>>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
 =======
     if (ok != pdPASS) {
 >>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
@@ -233,7 +265,10 @@ esp_err_t uart_proto_start(void)
         return ESP_ERR_NO_MEM;
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
 
+=======
+>>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
 =======
 >>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
     ESP_LOGI(TAG, "uart_proto rx task started");
@@ -244,9 +279,13 @@ void uart_proto_stop(void)
 {
     s_rx_run = false;
 <<<<<<< HEAD
+<<<<<<< HEAD
 
     if (s_rx_task) 
     {
+=======
+    if (s_rx_task) {
+>>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
 =======
     if (s_rx_task) {
 >>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
@@ -259,9 +298,13 @@ esp_err_t uart_proto_send_set(uint8_t info_id, bool en)
 {
     esp_err_t err = uart_proto_ensure_uart();
 <<<<<<< HEAD
+<<<<<<< HEAD
 
     if (err != ESP_OK) 
     {
+=======
+    if (err != ESP_OK) {
+>>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
 =======
     if (err != ESP_OK) {
 >>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
@@ -272,6 +315,7 @@ esp_err_t uart_proto_send_set(uint8_t info_id, bool en)
     size_t plen = 0;
     err = uart_proto_payload_pack_set(info_id, en, payload, sizeof(payload), &plen);
 <<<<<<< HEAD
+<<<<<<< HEAD
 
     if (err != ESP_OK) 
     {
@@ -281,11 +325,16 @@ esp_err_t uart_proto_send_set(uint8_t info_id, bool en)
     uart_proto_frame_t frame = 
     {
 =======
+=======
+>>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
     if (err != ESP_OK) {
         return err;
     }
 
     uart_proto_frame_t frame = {
+<<<<<<< HEAD
+>>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
+=======
 >>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
         .info_id = info_id,
         .info_cat = PROTO_INFO_CAT_EVENT,
@@ -297,9 +346,13 @@ esp_err_t uart_proto_send_set(uint8_t info_id, bool en)
     size_t wlen = 0;
     err = uart_proto_frame_build(&frame, wire, sizeof(wire), &wlen);
 <<<<<<< HEAD
+<<<<<<< HEAD
 
     if (err != ESP_OK) 
     {
+=======
+    if (err != ESP_OK) {
+>>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
 =======
     if (err != ESP_OK) {
 >>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
@@ -308,6 +361,7 @@ esp_err_t uart_proto_send_set(uint8_t info_id, bool en)
 
     size_t sent = 0;
     err = driver_uart_write(wire, wlen, &sent);
+<<<<<<< HEAD
 <<<<<<< HEAD
 
     if (err != ESP_OK) 
@@ -320,12 +374,17 @@ esp_err_t uart_proto_send_set(uint8_t info_id, bool en)
     }
     
 =======
+=======
+>>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
     if (err != ESP_OK) {
         return err;
     }
     if (sent != wlen) {
         return ESP_FAIL;
     }
+<<<<<<< HEAD
+>>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
+=======
 >>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
     ESP_LOGD(TAG, "send EVENT set id=0x%02X en=%d", info_id, (int)en);
     return ESP_OK;

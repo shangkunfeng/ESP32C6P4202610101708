@@ -38,7 +38,10 @@ static bool uart_proto_parse_finish(uart_proto_frame_t *out)
     const size_t crc_len = 1 + 1 + 1 + s_parse.frame.payload_len;
     uint8_t crc_buf[3 + UART_PROTO_FRAME_MAX_PAYLOAD];
 <<<<<<< HEAD
+<<<<<<< HEAD
     
+=======
+>>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
 =======
 >>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
     if (crc_len > sizeof(crc_buf)) {
@@ -144,6 +147,7 @@ static void uart_proto_parse_byte(uint8_t b, uart_proto_frame_t *out, bool *fram
 esp_err_t uart_proto_frame_feed(const uint8_t *chunk, size_t chunk_len, uart_proto_frame_t *out, bool *frame_ready)
 {
 <<<<<<< HEAD
+<<<<<<< HEAD
     if (!chunk || chunk_len == 0) 
     {
         return ESP_ERR_INVALID_ARG;
@@ -162,6 +166,8 @@ esp_err_t uart_proto_frame_feed(const uint8_t *chunk, size_t chunk_len, uart_pro
         if (ready && frame_ready) 
         {
 =======
+=======
+>>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
     if (!chunk || chunk_len == 0) {
         return ESP_ERR_INVALID_ARG;
     }
@@ -173,6 +179,9 @@ esp_err_t uart_proto_frame_feed(const uint8_t *chunk, size_t chunk_len, uart_pro
         bool ready = false;
         uart_proto_parse_byte(chunk[i], out, &ready);
         if (ready && frame_ready) {
+<<<<<<< HEAD
+>>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
+=======
 >>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
             *frame_ready = true;
             return ESP_OK;
