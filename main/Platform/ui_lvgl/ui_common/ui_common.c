@@ -297,7 +297,8 @@ static void wifi_state_async_cb(void *param)
     (void)param;
     ui_home_refresh_wifi_icon(&s_ui_home);
     
-    if (s_ui_wifi.screen) {
+    if (s_ui_wifi.screen) 
+    {
         ui_wifi_refresh(&s_ui_wifi);
     }
 }
@@ -312,7 +313,9 @@ static void wifi_state_notify_cb(void *user_data)
 static void uart_real_async_cb(void *param)
 {
     (void)param;
-    if (ui_get_current_screen() == UI_SCR_ui_home) {
+
+    if (ui_get_current_screen() == UI_SCR_ui_home) 
+    {
         ui_home_refresh_real_values(&s_ui_home);
     }
 }
