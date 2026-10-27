@@ -489,6 +489,7 @@ void ui_home_create(ui_home_t *ui, const lv_image_dsc_t *bg)
     create_footer_overlay(ui);
 
     ui_home_events_register(ui);
+    ui_home_refresh_real_values(ui);
 
     ESP_LOGI(TAG, "screen home (ui_home_back + overlay widgets)");
 }

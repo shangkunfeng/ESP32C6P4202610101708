@@ -16,6 +16,7 @@
 #include "ui_alarm_events.h"
 #include "ui_param.h"
 #include "ui_param_events.h"
+#include "uart_proto.h"
 
 #include "esp_log.h"
 #include "esp_system.h"
@@ -302,6 +303,19 @@ static void wifi_state_notify_cb(void *user_data)
     lv_async_call(wifi_state_async_cb, NULL);
 }
 
+static void uart_real_async_cb(void *param)
+{
+    (void)param;
+    if (ui_get_current_screen() == UI_SCR_ui_home) {
+        ui_home_refresh_real_values(&s_ui_home);
+    }
+}
+
+static void uart_proto_ui_notify_cb(void)
+{
+    lv_async_call(uart_real_async_cb, NULL);
+}
+
 static void ui_precreate_all_screens(void)
 {
     if (s_all_screens_created) {
@@ -326,6 +340,7 @@ static void ui_precreate_all_screens(void)
 
     s_all_screens_created = true;
     app_wifi_set_ui_notify(wifi_state_notify_cb, NULL);
+    uart_proto_set_ui_notify(uart_proto_ui_notify_cb);
     ui_home_refresh_wifi_icon(&s_ui_home);
     ESP_LOGI(TAG, "all %d screens created (persistent until power-off)", UI_SCR_COUNT);
 }

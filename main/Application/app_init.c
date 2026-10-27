@@ -8,6 +8,8 @@
 #include "driver_lcd.h"
 #include "driver_sd_tf.h"
 #include "driver_touch.h"
+#include "driver_uart.h"
+#include "uart_proto.h"
 #include "sd_tf_config.h"
 
 #include "esp_check.h"
@@ -143,6 +145,20 @@ esp_err_t app_init(void)
     err = init_background_assets();
     if (err != ESP_OK) {
         return err;
+    }
+
+    err = driver_uart_init();
+    if (err != ESP_OK) {
+        ESP_LOGW(TAG, "UART init: %s", esp_err_to_name(err));
+    }
+    err = uart_proto_init();
+    if (err != ESP_OK) {
+        ESP_LOGW(TAG, "uart_proto init: %s", esp_err_to_name(err));
+    } else {
+        err = uart_proto_start();
+        if (err != ESP_OK) {
+            ESP_LOGW(TAG, "uart_proto start: %s", esp_err_to_name(err));
+        }
     }
 
     s_phase = APP_INIT_PHASE_DONE;
