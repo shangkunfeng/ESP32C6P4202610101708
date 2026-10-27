@@ -64,7 +64,8 @@ static size_t rx_ring_free(void)
 
 static void rx_ring_push(const uint8_t *data, size_t len)
 {
-    for (size_t i = 0; i < len; i++) {
+    for (size_t i = 0; i < len; i++) 
+    {
         if (rx_ring_free() == 0) {
             s_rx_tail = (s_rx_tail + 1) % DRIVER_UART_RX_RING_SIZE;
         }

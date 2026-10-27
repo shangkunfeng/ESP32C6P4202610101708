@@ -37,6 +37,7 @@ static bool uart_proto_parse_finish(uart_proto_frame_t *out)
 {
     const size_t crc_len = 1 + 1 + 1 + s_parse.frame.payload_len;
     uint8_t crc_buf[3 + UART_PROTO_FRAME_MAX_PAYLOAD];
+    
     if (crc_len > sizeof(crc_buf)) {
         uart_proto_parse_reset();
         return false;

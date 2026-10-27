@@ -57,7 +57,8 @@ static void uart_proto_notify_ui(void)
 
 static esp_err_t uart_proto_dispatch_frame(const uart_proto_frame_t *frame)
 {
-    if (!frame) {
+    if (!frame) 
+    {
         return ESP_ERR_INVALID_ARG;
     }
 
