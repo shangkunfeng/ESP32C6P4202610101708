@@ -276,13 +276,17 @@ static lv_obj_t **const s_root[UI_SCR_COUNT] = {
 
 static void ui_ensure_screen(ui_screen_id_t id)
 {
-    if (id >= UI_SCR_COUNT) {
+    if (id >= UI_SCR_COUNT) 
+    {
         return;
     }
-    if (s_root[id] && *s_root[id]) {
+    if (s_root[id] && *s_root[id]) 
+    {
         return;
     }
-    if (s_create_fn[id]) {
+
+    if (s_create_fn[id]) 
+    {
         s_create_fn[id]();
     }
 }
@@ -292,6 +296,7 @@ static void wifi_state_async_cb(void *param)
 {
     (void)param;
     ui_home_refresh_wifi_icon(&s_ui_home);
+    
     if (s_ui_wifi.screen) {
         ui_wifi_refresh(&s_ui_wifi);
     }
@@ -300,6 +305,7 @@ static void wifi_state_async_cb(void *param)
 static void wifi_state_notify_cb(void *user_data)
 {
     (void)user_data;
+
     lv_async_call(wifi_state_async_cb, NULL);
 }
 

@@ -30,6 +30,7 @@ static uart_proto_ui_notify_fn s_ui_notify;
 
 static esp_err_t uart_proto_ensure_uart(void)
 {
+<<<<<<< HEAD
     if (!driver_uart_is_inited()) 
     {
         esp_err_t err = driver_uart_init();
@@ -40,6 +41,14 @@ static esp_err_t uart_proto_ensure_uart(void)
         }
     }
 
+=======
+    if (!driver_uart_is_inited()) {
+        esp_err_t err = driver_uart_init();
+        if (err != ESP_OK) {
+            return err;
+        }
+    }
+>>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
     return ESP_OK;
 }
 
@@ -57,8 +66,12 @@ static void uart_proto_notify_ui(void)
 
 static esp_err_t uart_proto_dispatch_frame(const uart_proto_frame_t *frame)
 {
+<<<<<<< HEAD
     if (!frame) 
     {
+=======
+    if (!frame) {
+>>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
         return ESP_ERR_INVALID_ARG;
     }
 
@@ -105,6 +118,7 @@ static void uart_proto_rx_task(void *arg)
     (void)arg;
     uint8_t chunk[UART_PROTO_RX_CHUNK];
 
+<<<<<<< HEAD
     while (s_rx_run) 
     {
         size_t n = 0;
@@ -123,6 +137,20 @@ static void uart_proto_rx_task(void *arg)
 
             if (ready) 
             {
+=======
+    while (s_rx_run) {
+        size_t n = 0;
+        esp_err_t err = driver_uart_read(chunk, sizeof(chunk), &n, pdMS_TO_TICKS(50));
+        if (err != ESP_OK || n == 0) {
+            continue;
+        }
+
+        for (size_t i = 0; i < n; i++) {
+            uart_proto_frame_t frame;
+            bool ready = false;
+            uart_proto_frame_feed(&chunk[i], 1, &frame, &ready);
+            if (ready) {
+>>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
                 uart_proto_dispatch_frame(&frame);
             }
         }
@@ -134,6 +162,7 @@ static void uart_proto_rx_task(void *arg)
 
 esp_err_t uart_proto_init(void)
 {
+<<<<<<< HEAD
     if (s_inited) 
     {
         return ESP_ERR_INVALID_STATE;
@@ -146,6 +175,15 @@ esp_err_t uart_proto_init(void)
         ESP_LOGW(TAG, "uart driver: %s", esp_err_to_name(err));
     }
 
+=======
+    if (s_inited) {
+        return ESP_ERR_INVALID_STATE;
+    }
+    esp_err_t err = uart_proto_ensure_uart();
+    if (err != ESP_OK) {
+        ESP_LOGW(TAG, "uart driver: %s", esp_err_to_name(err));
+    }
+>>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
     uart_proto_frame_parser_reset();
     s_inited = true;
     ESP_LOGI(TAG, "uart_proto init");
@@ -164,6 +202,7 @@ esp_err_t uart_proto_deinit(void)
 
 esp_err_t uart_proto_start(void)
 {
+<<<<<<< HEAD
     if (!s_inited)
     {
         return ESP_ERR_INVALID_STATE;
@@ -171,19 +210,32 @@ esp_err_t uart_proto_start(void)
 
     if (s_rx_task) 
     {
+=======
+    if (!s_inited) {
+        return ESP_ERR_INVALID_STATE;
+    }
+    if (s_rx_task) {
+>>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
         return ESP_OK;
     }
 
     s_rx_run = true;
     BaseType_t ok = xTaskCreate(uart_proto_rx_task, "uart_proto", UART_PROTO_RX_TASK_STACK, NULL,
                                 UART_PROTO_RX_TASK_PRIO, &s_rx_task);
+<<<<<<< HEAD
     if (ok != pdPASS) 
     {
+=======
+    if (ok != pdPASS) {
+>>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
         s_rx_run = false;
         s_rx_task = NULL;
         return ESP_ERR_NO_MEM;
     }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
     ESP_LOGI(TAG, "uart_proto rx task started");
     return ESP_OK;
 }
@@ -191,9 +243,13 @@ esp_err_t uart_proto_start(void)
 void uart_proto_stop(void)
 {
     s_rx_run = false;
+<<<<<<< HEAD
 
     if (s_rx_task) 
     {
+=======
+    if (s_rx_task) {
+>>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
         vTaskDelete(s_rx_task);
         s_rx_task = NULL;
     }
@@ -202,15 +258,20 @@ void uart_proto_stop(void)
 esp_err_t uart_proto_send_set(uint8_t info_id, bool en)
 {
     esp_err_t err = uart_proto_ensure_uart();
+<<<<<<< HEAD
 
     if (err != ESP_OK) 
     {
+=======
+    if (err != ESP_OK) {
+>>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
         return err;
     }
 
     uint8_t payload[UART_PROTO_FRAME_MAX_PAYLOAD];
     size_t plen = 0;
     err = uart_proto_payload_pack_set(info_id, en, payload, sizeof(payload), &plen);
+<<<<<<< HEAD
 
     if (err != ESP_OK) 
     {
@@ -219,6 +280,13 @@ esp_err_t uart_proto_send_set(uint8_t info_id, bool en)
 
     uart_proto_frame_t frame = 
     {
+=======
+    if (err != ESP_OK) {
+        return err;
+    }
+
+    uart_proto_frame_t frame = {
+>>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
         .info_id = info_id,
         .info_cat = PROTO_INFO_CAT_EVENT,
         .payload_len = (uint16_t)plen,
@@ -228,14 +296,19 @@ esp_err_t uart_proto_send_set(uint8_t info_id, bool en)
     uint8_t wire[64];
     size_t wlen = 0;
     err = uart_proto_frame_build(&frame, wire, sizeof(wire), &wlen);
+<<<<<<< HEAD
 
     if (err != ESP_OK) 
     {
+=======
+    if (err != ESP_OK) {
+>>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
         return err;
     }
 
     size_t sent = 0;
     err = driver_uart_write(wire, wlen, &sent);
+<<<<<<< HEAD
 
     if (err != ESP_OK) 
     {
@@ -246,6 +319,14 @@ esp_err_t uart_proto_send_set(uint8_t info_id, bool en)
         return ESP_FAIL;
     }
     
+=======
+    if (err != ESP_OK) {
+        return err;
+    }
+    if (sent != wlen) {
+        return ESP_FAIL;
+    }
+>>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
     ESP_LOGD(TAG, "send EVENT set id=0x%02X en=%d", info_id, (int)en);
     return ESP_OK;
 }
