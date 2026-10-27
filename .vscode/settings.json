@@ -23,7 +23,7 @@
     "idf.port": "COM3",
     "idf.monitorPort": "COM3",
     "idf.monitorBaudRate": "115200",
-    "idf.flashBaudRate": "460800",
+    "idf.flashBaudRate": "115200",
     "idf.saveBeforeBuild": true,
     "clangd.path": "D:\\Espressif\\tools\\esp-clangd\\esp-21.1.3_20260408\\esp-clangd\\bin\\clangd.exe",
     "clangd.arguments": [

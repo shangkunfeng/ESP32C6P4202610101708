@@ -62,6 +62,12 @@ idf_component_register(
         "Driver/lcd/driver_draw.c"
         "Driver/touch/driver_touch.c"
         "Driver/sd_tf/driver_sd_tf.c"
+        "Driver/uart/driver_uart.c"
+        "Protocal/uart_proto.c"
+        "Protocal/uart_proto_frame.c"
+        "Protocal/uart_proto_info_table.c"
+        "Protocal/uart_proto_crc.c"
+        "Protocal/uart_proto_payload.c"
         "Driver/co2/driver_co2.c"
         "Driver/temp/driver_temp.c"
         "Driver/hum/driver_hum.c"
@@ -81,6 +87,8 @@ idf_component_register(
         "Driver/lcd"
         "Driver/touch"
         "Driver/sd_tf"
+        "Driver/uart"
+        "Protocal"
         "Driver/co2"
         "Driver/temp"
         "Driver/hum"
@@ -106,6 +114,7 @@ idf_component_register(
         esp_lcd_touch_gt911
         fatfs
         esp_driver_sdmmc
+        esp_driver_uart
         sdmmc
         cjson
         nvs_flash

@@ -13,6 +13,7 @@
 #include "driver_hum.h"
 #include "driver_rpm.h"
 #include "driver_temp.h"
+#include "uart_proto.h"
 
 static const char *TAG = "ui_home_evt";
 
@@ -593,6 +594,7 @@ void ui_home_events_on_screen_active(ui_home_t *ui)
     }
 
     ui_home_refresh_wifi_icon(ui);
+    ui_home_refresh_real_values(ui);
 }
 
 static void home_btn_alarm_cb(lv_event_t *e)
@@ -691,7 +693,12 @@ static void home_btn_start_cb(lv_event_t *e)
     if (!ui) {
         return;
     }
-    ESP_LOGI(TAG, "start");
+    ESP_LOGI(TAG, "start: all channels enable + UART EVENT x4");
+    esp_err_t err = uart_proto_send_all_enable(true);
+    if (err != ESP_OK) {
+        ESP_LOGW(TAG, "uart_proto_send_all_enable(true): %s", esp_err_to_name(err));
+    }
+    ui_home_refresh_real_values(ui);
     if (ui->lbl_dev_fan) {
         lv_label_set_text(ui->lbl_dev_fan, "运行");
         status_text_green(ui->lbl_dev_fan);
@@ -707,63 +714,60 @@ static void home_btn_stop_cb(lv_event_t *e)
     if (!ui) {
         return;
     }
-    ESP_LOGI(TAG, "stop");
+    ESP_LOGI(TAG, "stop: all channels disable + UART EVENT x4");
+    esp_err_t err = uart_proto_send_all_enable(false);
+    if (err != ESP_OK) {
+        ESP_LOGW(TAG, "uart_proto_send_all_enable(false): %s", esp_err_to_name(err));
+    }
+    ui_home_refresh_real_values(ui);
     if (ui->lbl_dev_fan) {
         lv_label_set_text(ui->lbl_dev_fan, "停止");
         status_text_orange(ui->lbl_dev_fan);
     }
 }
 
-static void home_demo_timer_cb(lv_timer_t *timer)
+void ui_home_refresh_real_values(ui_home_t *ui)
 {
-    ui_home_t *ui = lv_timer_get_user_data(timer);
-    if (!ui || !ui->screen || lv_screen_active() != ui->screen) {
-        return;
-    }
-    if (s_trend_overlay) {
-        return;
-    }
-    if (!s_home_login_entry_complete) {
+    if (!ui || !ui->screen) {
         return;
     }
 
     char buf[16];
-    if(co2_struct.En == false)
-    {
+    if (co2_struct.En == false) {
         snprintf(buf, sizeof(buf), "%.1f", 0.0);
         lv_label_set_text(ui->lbl_co2_val, buf);
         lv_arc_set_value(ui->arc_co2, 0);
 
-        if (ui->scale_co2_needle && ui->needle_co2) 
+        if (ui->scale_co2_needle && ui->needle_co2) {
             lv_scale_set_line_needle_value(ui->scale_co2_needle, ui->needle_co2, 62, 0);
-    }
-    else
-    {
+        }
+    } else {
         snprintf(buf, sizeof(buf), "%.1f", (double)co2_struct.CO2_Real_Value);
         lv_label_set_text(ui->lbl_co2_val, buf);
         lv_arc_set_value(ui->arc_co2, (int32_t)co2_struct.CO2_Real_Value);
 
-        if (ui->scale_co2_needle && ui->needle_co2) 
+        if (ui->scale_co2_needle && ui->needle_co2) {
             lv_scale_set_line_needle_value(ui->scale_co2_needle, ui->needle_co2, 62, (int32_t)co2_struct.CO2_Real_Value);
+        }
     }
 
-    if(temp_struct.En == false)
-    {
+    if (temp_struct.En == false) {
         snprintf(buf, sizeof(buf), "%.1f", 0.0);
         lv_label_set_text(ui->lbl_temp_val, buf);
         lv_arc_set_value(ui->arc_temp, 0);
 
-        if (ui->scale_temp_needle && ui->needle_temp) 
+        if (ui->scale_temp_needle && ui->needle_temp) {
             lv_scale_set_line_needle_value(ui->scale_temp_needle, ui->needle_temp, 62, 0);
-    }
-    else
-    {
+        }
+    } else {
         snprintf(buf, sizeof(buf), "%.1f", (double)temp_struct.Temp_Real_Value);
         lv_label_set_text(ui->lbl_temp_val, buf);
         lv_arc_set_value(ui->arc_temp, (int32_t)temp_struct.Temp_Real_Value);
 
-        if (ui->scale_temp_needle && ui->needle_temp) 
-            lv_scale_set_line_needle_value(ui->scale_temp_needle, ui->needle_temp, 62, (int32_t)temp_struct.Temp_Real_Value);
+        if (ui->scale_temp_needle && ui->needle_temp) {
+            lv_scale_set_line_needle_value(ui->scale_temp_needle, ui->needle_temp, 62,
+                                            (int32_t)temp_struct.Temp_Real_Value);
+        }
     }
 
     if (hum_struct.En == false) {
@@ -809,6 +813,22 @@ static void home_demo_timer_cb(lv_timer_t *timer)
                                            (int32_t)rpm_struct.RPM_Real_Value);
         }
     }
+}
+
+static void home_demo_timer_cb(lv_timer_t *timer)
+{
+    ui_home_t *ui = lv_timer_get_user_data(timer);
+    if (!ui || !ui->screen || lv_screen_active() != ui->screen) {
+        return;
+    }
+    if (s_trend_overlay) {
+        return;
+    }
+    if (!s_home_login_entry_complete) {
+        return;
+    }
+
+    ui_home_refresh_real_values(ui);
 }
 
 void ui_home_events_register(ui_home_t *ui)
