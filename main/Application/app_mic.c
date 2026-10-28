@@ -16,6 +16,7 @@ static const char *TAG = "app_mic";
 
 static TaskHandle_t s_mic_task;
 static bool s_mic_started;
+static volatile int32_t s_pcm_peak;
 
 #if UART1_MIC_STREAM_ENABLE
 static void mic_uart1_send_pcm(const int16_t *pcm, size_t sample_count)
@@ -50,6 +51,11 @@ static void mic_uart1_send_pcm(const int16_t *pcm, size_t sample_count)
     }
 }
 #endif
+
+int32_t app_mic_get_pcm_peak(void)
+{
+    return s_pcm_peak;
+}
 
 static void mic_capture_task(void *arg)
 {
@@ -98,7 +104,7 @@ static void mic_capture_task(void *arg)
         }
 #endif
 
-        if ((loop++ % 50) == 0 && frames_read > 0) {
+        if (frames_read > 0) {
             int32_t peak = 0;
             for (size_t i = 0; i < frames_read * ES8311_DEFAULT_CHANNELS; i++) {
                 int32_t v = pcm[i];
@@ -109,7 +115,10 @@ static void mic_capture_task(void *arg)
                     peak = v;
                 }
             }
-            ESP_LOGI(TAG, "pcm peak=%ld (frames=%u)", (long)peak, (unsigned)frames_read);
+            s_pcm_peak = peak;
+            if ((loop++ % 50) == 0) {
+                ESP_LOGI(TAG, "pcm peak=%ld (frames=%u)", (long)peak, (unsigned)frames_read);
+            }
         }
     }
 }

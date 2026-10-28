@@ -56,7 +56,9 @@ idf_component_register(
         "Application/app_tasks.c"
         "Application/app_lvgl.c"
         "Application/app_wifi.c"
+        "Application/app_eth.c"
         "Application/app_mic.c"
+        "Application/app_uart1_plot.c"
         "Board/board_display.c"
         "Driver/lcd/esp_lcd_jd9165.c"
         "Driver/lcd/driver_lcd.c"
@@ -65,6 +67,7 @@ idf_component_register(
         "Driver/sd_tf/driver_sd_tf.c"
         "Driver/uart/driver_uart.c"
         "Driver/uart1/driver_uart1.c"
+        "Driver/eth/driver_eth.c"
         "Protocal/uart_proto.c"
         "Protocal/uart_proto_frame.c"
         "Protocal/uart_proto_info_table.c"
@@ -92,6 +95,7 @@ idf_component_register(
         "Driver/sd_tf"
         "Driver/uart"
         "Driver/uart1"
+        "Driver/eth"
         "Protocal"
         "Driver/co2"
         "Driver/temp"
@@ -126,6 +130,7 @@ idf_component_register(
         nvs_flash
         esp_wifi
         esp_netif
+        esp_eth
         esp_event
         esp_hosted
     )

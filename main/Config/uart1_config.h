@@ -8,7 +8,8 @@
  *   UART1 TXD → GPIO26
  *   UART1 RXD → GPIO27
  *
- * 与 UART0（uart_config.h / driver_uart）独立，供 VOFA、透传、调试等使用。
+ * 与 UART0（uart_config.h / driver_uart）独立。
+ * UART0 接收 CO2/温度/湿度/转速实时值；UART1 把这四路加上本机声音峰值送到 Serial Studio。
  */
 
 #include "display_config.h"
@@ -34,11 +35,25 @@
 #define UART1_QUEUE_DEPTH           0
 
 /* -------------------------------------------------------------------------- */
-/* 采麦 PCM 经 UART1 输出（app_mic.c）                                         */
+/* UART1 输出：Serial Studio Pro Quick Plot 与 PCM 流共用这条线，只能开一个   */
 /* -------------------------------------------------------------------------- */
 
-/** 1：每帧 I2S 读完后向 UART1 发送 PCM；0：仅日志 peak */
-#define UART1_MIC_STREAM_ENABLE         1
+/**
+ * Quick Plot 文本行（app_uart1_plot.c），逗号分隔、换行结束：
+ *   CO2,温度,湿度,转速,声音\n
+ * 例：800.00,25.30,60.12,1500.00,1480\n
+ */
+#define UART1_SERIAL_STUDIO_PLOT_ENABLE 1
+
+/** Quick Plot 发送周期（毫秒） */
+#define UART1_PLOT_INTERVAL_MS          100
+
+/** 1：每帧 I2S 读完后向 UART1 发送 PCM；与 Quick Plot 互斥 */
+#define UART1_MIC_STREAM_ENABLE         0
+
+#if UART1_MIC_STREAM_ENABLE && UART1_SERIAL_STUDIO_PLOT_ENABLE
+#error "UART1: enable either UART1_MIC_STREAM_ENABLE or UART1_SERIAL_STUDIO_PLOT_ENABLE, not both"
+#endif
 
 /**
  * 发送前抽点（16000 Hz / DECIM = 线上等效采样率）。
