@@ -2,14 +2,12 @@
 #define __ES8311_CONFIG_H__
 
 /**
- * JC1060P470C / JC-ESP32P4-M3 — ES8311 音频 Codec 硬件参数
+ * JC1060P470C / JC-ESP32P4-M3 — ES8311 / 板载麦（采集）硬件参数
  *
  * 原理图 JC1060P470C_I_W_Y-V1.0（ES8311 页）：
- *   - U1 ES8311-S：I2C 配置 + I2S0 数字音频
+ *   - U1 ES8311-S：I2C 配置 + I2S0 时钟/模拟麦前端（MSM381 → MIC1P/MIC1N）
  *   - ES_I2C_SDA/SCL 与 GT911 触摸共用 I2C 总线（GPIO7/8）
- *   - DAC_OUT_P/N → U2 NS4150 功放 → 喇叭；PA_CTRL 高电平使能功放
- *   - 板载 MSM381 模拟麦接 MIC1P/MIC1N；ES8311 ASDOUT 未接 ESP32-P4
- *     （多麦 ADC 走 ES7210，SDOUT → GPIO48，见独立配置）
+ *   - 数字录音：ES7210_SDOUT → GPIO48（ES8311 ASDOUT 未接 ESP32-P4）
  *
  * 本文件仅宏定义，不包含 ESP-IDF 头文件（与 display_config.h / sd_tf_config.h 一致）。
  */
@@ -32,7 +30,7 @@
 #define ES8311_I2C_SCL_HZ           100000
 
 /* -------------------------------------------------------------------------- */
-/* I2S0 — 网络名 CODEC_I2S0_*                                                  */
+/* I2S0 — 网络名 CODEC_I2S0_* / ES7210_SDOUT                                   */
 /* -------------------------------------------------------------------------- */
 
 #define ES8311_I2S_PORT             0   /* I2S_NUM_0 */
@@ -46,19 +44,8 @@
 /** LRCK / WS → CODEC_I2S0_LRCK */
 #define ES8311_I2S_WS_GPIO          10
 
-/** ESP TX → ES8311 DSDIN（播放） */
-#define ES8311_I2S_DOUT_GPIO        9
-
-/** ES8311 ASDOUT → ESP RX：本版原理图未连接 */
-#define ES8311_I2S_DIN_GPIO         PIN_NC
-
-/* -------------------------------------------------------------------------- */
-/* 功放 NS4150（U2）                                                           */
-/* -------------------------------------------------------------------------- */
-
-/** 网络 PA_CTRL；高电平使能喇叭输出 */
-#define ES8311_PA_CTRL_GPIO         11
-#define ES8311_PA_CTRL_ACTIVE_HIGH  1
+/** ES7210 SDOUT → P4 I2S RX（录音数据） */
+#define ES8311_I2S_DIN_GPIO         48
 
 /* -------------------------------------------------------------------------- */
 /* 常用音频格式默认值（驱动初始化时可覆盖）                                     */
@@ -69,10 +56,24 @@
 
 #define ES8311_DEFAULT_BITS_PER_SAMPLE  16
 
-/** 单声道 MSM381 → ES8311 MIC1；播放为立体声 I2S 时由驱动填右声道 */
+/** 单声道 MSM381 → ES8311 MIC1 */
 #define ES8311_DEFAULT_CHANNELS         1
 
 /** 使用 MCLK 时典型为 sample_rate × 256 */
 #define ES8311_MCLK_MULTIPLE            256
+
+/* -------------------------------------------------------------------------- */
+/* 采麦 FreeRTOS 任务（app_mic.c）                                             */
+/* -------------------------------------------------------------------------- */
+
+#define ES8311_MIC_TASK_NAME            "mic_cap"
+#define ES8311_MIC_TASK_STACK_WORDS     4096
+#define ES8311_MIC_TASK_PRIO            (tskIDLE_PRIORITY + 5)
+
+/** 每次 read_pcm 请求的帧数（单声道） */
+#define ES8311_PCM_FRAMES_PER_READ      256
+
+/** ES7210 7-bit I2C 地址（若总线上无器件则跳过配置） */
+#define ES7210_I2C_ADDR                 0x40
 
 #endif

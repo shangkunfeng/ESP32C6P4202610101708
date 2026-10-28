@@ -7,8 +7,10 @@
 #include "display_config.h"
 #include "driver_lcd.h"
 #include "driver_sd_tf.h"
+#include "driver_es8311.h"
 #include "driver_touch.h"
 #include "driver_uart.h"
+#include "driver_uart1.h"
 #include "uart_proto.h"
 #include "sd_tf_config.h"
 
@@ -123,6 +125,11 @@ esp_err_t app_init(void)
         return err;
     }
 
+    err = driver_es8311_init();
+    if (err != ESP_OK) {
+        ESP_LOGW(TAG, "ES8311 init: %s (mic disabled)", esp_err_to_name(err));
+    }
+
     err = init_storage();
     if (err != ESP_OK) {
         ESP_LOGE(TAG, "SD init: %s", esp_err_to_name(err));
@@ -150,6 +157,11 @@ esp_err_t app_init(void)
     err = driver_uart_init();
     if (err != ESP_OK) {
         ESP_LOGW(TAG, "UART init: %s", esp_err_to_name(err));
+    }
+
+    err = driver_uart1_init();
+    if (err != ESP_OK) {
+        ESP_LOGW(TAG, "UART1 init: %s (mic stream disabled)", esp_err_to_name(err));
     }
     err = uart_proto_init();
     if (err != ESP_OK) {

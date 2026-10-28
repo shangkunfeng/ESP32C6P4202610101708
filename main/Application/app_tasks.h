@@ -15,6 +15,7 @@ extern "C" {
  *
  * 当前任务：
  *   - lvgl：LVGL tick + lv_timer_handler + ui_common 界面
+ *   - mic_cap：ES8311 / I2S RX 采麦（driver_es8311 + app_mic）
  *
  * 新增业务任务时：在 app_tasks.c 增加启动函数，并在 app_tasks_start() 中调用。
  */

@@ -57,6 +57,11 @@ esp_err_t driver_touch_init(void)
     return ESP_OK;
 }
 
+i2c_master_bus_handle_t driver_touch_get_i2c_bus(void)
+{
+    return s_i2c_bus;
+}
+
 bool driver_touch_read(uint16_t *x, uint16_t *y)
 {
     if (!s_tp || !x || !y) {

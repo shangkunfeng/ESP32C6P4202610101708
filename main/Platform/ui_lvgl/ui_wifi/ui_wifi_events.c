@@ -21,10 +21,10 @@ static void wifi_pwd_hide(ui_wifi_t *ui)
     }
     if (ui->pwd_keyboard) {
         lv_keyboard_set_textarea(ui->pwd_keyboard, NULL);
-        lv_obj_add_flag(ui->pwd_keyboard, LV_OBJ_FLAG_HIDDEN);
+        lv_obj_set_hidden(ui->pwd_keyboard, true);
     }
     if (ui->pwd_overlay) {
-        lv_obj_add_flag(ui->pwd_overlay, LV_OBJ_FLAG_HIDDEN);
+        lv_obj_set_hidden(ui->pwd_overlay, true);
     }
 }
 
@@ -38,10 +38,10 @@ static void wifi_pwd_show(ui_wifi_t *ui, const char *ssid)
     if (ssid && ssid[0] != '\0') {
         lv_textarea_set_placeholder_text(ui->pwd_ta, ssid);
     }
-    lv_obj_clear_flag(ui->pwd_overlay, LV_OBJ_FLAG_HIDDEN);
+    lv_obj_set_hidden(ui->pwd_overlay, false);
     lv_obj_move_foreground(ui->pwd_overlay);
     if (ui->pwd_keyboard) {
-        lv_obj_clear_flag(ui->pwd_keyboard, LV_OBJ_FLAG_HIDDEN);
+        lv_obj_set_hidden(ui->pwd_keyboard, false);
         lv_keyboard_set_textarea(ui->pwd_keyboard, ui->pwd_ta);
         lv_obj_move_foreground(ui->pwd_keyboard);
     }
@@ -164,7 +164,7 @@ static void wifi_pwd_ta_focus_cb(lv_event_t *e)
     if (!ui || !ui->pwd_keyboard || !ui->pwd_ta) {
         return;
     }
-    lv_obj_clear_flag(ui->pwd_keyboard, LV_OBJ_FLAG_HIDDEN);
+    lv_obj_set_hidden(ui->pwd_keyboard, false);
     lv_keyboard_set_textarea(ui->pwd_keyboard, ui->pwd_ta);
     lv_obj_move_foreground(ui->pwd_keyboard);
 }

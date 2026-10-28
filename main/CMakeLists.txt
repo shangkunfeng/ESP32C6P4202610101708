@@ -56,6 +56,7 @@ idf_component_register(
         "Application/app_tasks.c"
         "Application/app_lvgl.c"
         "Application/app_wifi.c"
+        "Application/app_mic.c"
         "Board/board_display.c"
         "Driver/lcd/esp_lcd_jd9165.c"
         "Driver/lcd/driver_lcd.c"
@@ -63,6 +64,7 @@ idf_component_register(
         "Driver/touch/driver_touch.c"
         "Driver/sd_tf/driver_sd_tf.c"
         "Driver/uart/driver_uart.c"
+        "Driver/uart1/driver_uart1.c"
         "Protocal/uart_proto.c"
         "Protocal/uart_proto_frame.c"
         "Protocal/uart_proto_info_table.c"
@@ -72,6 +74,7 @@ idf_component_register(
         "Driver/temp/driver_temp.c"
         "Driver/hum/driver_hum.c"
         "Driver/rpm/driver_rpm.c"
+        "Driver/es8311/driver_es8311.c"
         "Driver/hum/driver_hum.c"
         "Driver/rpm/driver_rpm.c"
         "Middleware/lv_port/lv_port_disp.c"
@@ -88,11 +91,13 @@ idf_component_register(
         "Driver/touch"
         "Driver/sd_tf"
         "Driver/uart"
+        "Driver/uart1"
         "Protocal"
         "Driver/co2"
         "Driver/temp"
         "Driver/hum"
         "Driver/rpm"
+        "Driver/es8311"
         "Middleware"
         "Middleware/lv_port"
         "Platform"
@@ -110,6 +115,7 @@ idf_component_register(
         lvgl
         esp_timer
         esp_driver_i2c
+        esp_driver_i2s
         esp_lcd_touch
         esp_lcd_touch_gt911
         fatfs

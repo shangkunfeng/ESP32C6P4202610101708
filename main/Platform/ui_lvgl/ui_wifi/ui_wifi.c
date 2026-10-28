@@ -351,8 +351,8 @@ void ui_wifi_create(ui_wifi_t *ui, const lv_image_dsc_t *bg)
     lv_obj_set_style_bg_color(ui->pwd_overlay, lv_color_hex(0x000000), LV_PART_MAIN);
     lv_obj_set_style_bg_opa(ui->pwd_overlay, LV_OPA_60, LV_PART_MAIN);
     lv_obj_set_style_border_width(ui->pwd_overlay, 0, LV_PART_MAIN);
-    lv_obj_add_flag(ui->pwd_overlay, LV_OBJ_FLAG_HIDDEN);
-    lv_obj_add_flag(ui->pwd_overlay, LV_OBJ_FLAG_CLICKABLE);
+    lv_obj_set_hidden(ui->pwd_overlay, true);
+    lv_obj_set_clickable(ui->pwd_overlay, true);
 
     ui->pwd_panel = lv_obj_create(ui->pwd_overlay);
     lv_obj_set_size(ui->pwd_panel, 520, 300);
@@ -395,7 +395,7 @@ void ui_wifi_create(ui_wifi_t *ui, const lv_image_dsc_t *bg)
     lv_obj_set_size(ui->pwd_keyboard, LCD_H_RES, 200);
     lv_obj_align(ui->pwd_keyboard, LV_ALIGN_BOTTOM_MID, 0, 0);
     lv_keyboard_set_mode(ui->pwd_keyboard, LV_KEYBOARD_MODE_TEXT_LOWER);
-    lv_obj_add_flag(ui->pwd_keyboard, LV_OBJ_FLAG_HIDDEN);
+    lv_obj_set_hidden(ui->pwd_keyboard, true);
 
     lv_obj_move_foreground(title_row);
     lv_obj_move_foreground(ui->panel_status);
@@ -436,10 +436,10 @@ void ui_wifi_on_screen_leave(ui_wifi_t *ui)
     }
     if (ui->pwd_keyboard) {
         lv_keyboard_set_textarea(ui->pwd_keyboard, NULL);
-        lv_obj_add_flag(ui->pwd_keyboard, LV_OBJ_FLAG_HIDDEN);
+        lv_obj_set_hidden(ui->pwd_keyboard, true);
     }
     if (ui->pwd_overlay) {
-        lv_obj_add_flag(ui->pwd_overlay, LV_OBJ_FLAG_HIDDEN);
+        lv_obj_set_hidden(ui->pwd_overlay, true);
     }
 }
 

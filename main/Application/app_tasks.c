@@ -3,7 +3,9 @@
 #include "app_history_store.h"
 #include "app_init.h"
 #include "app_lvgl.h"
+#include "app_mic.h"
 #include "app_wifi.h"
+#include "driver_es8311.h"
 #include "sd_tf_config.h"
 
 #include "esp_check.h"
@@ -46,6 +48,13 @@ esp_err_t app_tasks_start(void)
     }
 
     ESP_RETURN_ON_ERROR(start_lvgl_task(), TAG, "LVGL task");
+
+    if (driver_es8311_is_inited()) {
+        esp_err_t mic_err = app_mic_start();
+        if (mic_err != ESP_OK) {
+            ESP_LOGW(TAG, "mic task: %s", esp_err_to_name(mic_err));
+        }
+    }
 
     esp_err_t hist_err = app_history_store_start();
     if (hist_err != ESP_OK) {
