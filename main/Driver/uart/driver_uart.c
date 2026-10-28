@@ -49,23 +49,11 @@ static void *s_rx_cb_ctx;
 
 static size_t rx_ring_used(void)
 {
-<<<<<<< HEAD
-<<<<<<< HEAD
     if (s_rx_head >= s_rx_tail) 
     {
         return s_rx_head - s_rx_tail;
     }
 
-=======
-    if (s_rx_head >= s_rx_tail) {
-        return s_rx_head - s_rx_tail;
-    }
->>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
-=======
-    if (s_rx_head >= s_rx_tail) {
-        return s_rx_head - s_rx_tail;
-    }
->>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
     return DRIVER_UART_RX_RING_SIZE - s_rx_tail + s_rx_head;
 }
 
@@ -76,16 +64,8 @@ static size_t rx_ring_free(void)
 
 static void rx_ring_push(const uint8_t *data, size_t len)
 {
-<<<<<<< HEAD
-<<<<<<< HEAD
     for (size_t i = 0; i < len; i++) 
     {
-=======
-    for (size_t i = 0; i < len; i++) {
->>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
-=======
-    for (size_t i = 0; i < len; i++) {
->>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
         if (rx_ring_free() == 0) {
             s_rx_tail = (s_rx_tail + 1) % DRIVER_UART_RX_RING_SIZE;
         }
@@ -201,8 +181,6 @@ static int uart_flow_pin(int gpio)
 
 static void rx_sem_drain(void)
 {
-<<<<<<< HEAD
-<<<<<<< HEAD
     if (s_rx_data_sem == NULL) 
     {
         return;
@@ -210,17 +188,6 @@ static void rx_sem_drain(void)
 
     while (xSemaphoreTake(s_rx_data_sem, 0) == pdTRUE) 
     {
-=======
-=======
->>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
-    if (s_rx_data_sem == NULL) {
-        return;
-    }
-    while (xSemaphoreTake(s_rx_data_sem, 0) == pdTRUE) {
-<<<<<<< HEAD
->>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
-=======
->>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
     }
 }
 
@@ -265,8 +232,6 @@ esp_err_t driver_uart_init(void)
     s_rx_mux = xSemaphoreCreateMutex();
     s_rx_data_sem = xSemaphoreCreateCounting(DRIVER_UART_RX_NOTIFY_MAX, 0);
     s_tx_queue = xQueueCreate(DRIVER_UART_TX_QUEUE_DEPTH, sizeof(driver_uart_tx_pkt_t));
-<<<<<<< HEAD
-<<<<<<< HEAD
 
     if (s_rx_mux == NULL || s_rx_data_sem == NULL || s_tx_queue == NULL) 
     {
@@ -288,26 +253,6 @@ esp_err_t driver_uart_init(void)
             s_rx_mux = NULL;
         }
 
-=======
-=======
->>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
-    if (s_rx_mux == NULL || s_rx_data_sem == NULL || s_tx_queue == NULL) {
-        if (s_tx_queue) {
-            vQueueDelete(s_tx_queue);
-            s_tx_queue = NULL;
-        }
-        if (s_rx_data_sem) {
-            vSemaphoreDelete(s_rx_data_sem);
-            s_rx_data_sem = NULL;
-        }
-        if (s_rx_mux) {
-            vSemaphoreDelete(s_rx_mux);
-            s_rx_mux = NULL;
-        }
-<<<<<<< HEAD
->>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
-=======
->>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
         uart_driver_delete(UART0_PORT_NUM);
         return ESP_ERR_NO_MEM;
     }
@@ -329,8 +274,6 @@ esp_err_t driver_uart_init(void)
         NULL,
         DRIVER_UART_TX_TASK_PRIO,
         &s_tx_task);
-<<<<<<< HEAD
-<<<<<<< HEAD
 
     if (ok_rx != pdPASS || ok_tx != pdPASS) 
     {
@@ -342,19 +285,6 @@ esp_err_t driver_uart_init(void)
 
         if (s_rx_task) 
         {
-=======
-=======
->>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
-    if (ok_rx != pdPASS || ok_tx != pdPASS) {
-        if (s_tx_task) {
-            vTaskDelete(s_tx_task);
-            s_tx_task = NULL;
-        }
-        if (s_rx_task) {
-<<<<<<< HEAD
->>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
-=======
->>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
             vTaskDelete(s_rx_task);
             s_rx_task = NULL;
         }
@@ -376,8 +306,6 @@ esp_err_t driver_uart_init(void)
 
 esp_err_t driver_uart_deinit(void)
 {
-<<<<<<< HEAD
-<<<<<<< HEAD
     if (!s_inited) 
     {
         return ESP_ERR_INVALID_STATE;
@@ -391,22 +319,6 @@ esp_err_t driver_uart_deinit(void)
 
     if (s_rx_task) 
     {
-=======
-=======
->>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
-    if (!s_inited) {
-        return ESP_ERR_INVALID_STATE;
-    }
-
-    if (s_tx_task) {
-        vTaskDelete(s_tx_task);
-        s_tx_task = NULL;
-    }
-    if (s_rx_task) {
-<<<<<<< HEAD
->>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
-=======
->>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
         vTaskDelete(s_rx_task);
         s_rx_task = NULL;
     }
@@ -414,8 +326,6 @@ esp_err_t driver_uart_deinit(void)
     uart_driver_delete(UART0_PORT_NUM);
     s_uart_queue = NULL;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
     if (s_tx_queue) 
     {
         vQueueDelete(s_tx_queue);
@@ -430,22 +340,6 @@ esp_err_t driver_uart_deinit(void)
 
     if (s_rx_mux) 
     {
-=======
-=======
->>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
-    if (s_tx_queue) {
-        vQueueDelete(s_tx_queue);
-        s_tx_queue = NULL;
-    }
-    if (s_rx_data_sem) {
-        vSemaphoreDelete(s_rx_data_sem);
-        s_rx_data_sem = NULL;
-    }
-    if (s_rx_mux) {
-<<<<<<< HEAD
->>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
-=======
->>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
         vSemaphoreDelete(s_rx_mux);
         s_rx_mux = NULL;
     }
@@ -465,8 +359,6 @@ bool driver_uart_is_inited(void)
 
 esp_err_t driver_uart_write(const uint8_t *data, size_t len, size_t *bytes_written)
 {
-<<<<<<< HEAD
-<<<<<<< HEAD
     if (!s_inited || data == NULL || len == 0) 
     {
         return ESP_ERR_INVALID_ARG;
@@ -474,17 +366,6 @@ esp_err_t driver_uart_write(const uint8_t *data, size_t len, size_t *bytes_writt
 
     if (len > DRIVER_UART_TX_PKT_MAX) 
     {
-=======
-=======
->>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
-    if (!s_inited || data == NULL || len == 0) {
-        return ESP_ERR_INVALID_ARG;
-    }
-    if (len > DRIVER_UART_TX_PKT_MAX) {
-<<<<<<< HEAD
->>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
-=======
->>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
         return ESP_ERR_INVALID_SIZE;
     }
 
@@ -492,8 +373,6 @@ esp_err_t driver_uart_write(const uint8_t *data, size_t len, size_t *bytes_writt
     pkt.len = len;
     memcpy(pkt.data, data, len);
 
-<<<<<<< HEAD
-<<<<<<< HEAD
     if (xQueueSend(s_tx_queue, &pkt, DRIVER_UART_TX_ENQUEUE_TICKS) != pdTRUE) 
     {
         return ESP_ERR_TIMEOUT;
@@ -504,42 +383,18 @@ esp_err_t driver_uart_write(const uint8_t *data, size_t len, size_t *bytes_writt
         *bytes_written = len;
     }
 
-=======
-=======
->>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
-    if (xQueueSend(s_tx_queue, &pkt, DRIVER_UART_TX_ENQUEUE_TICKS) != pdTRUE) {
-        return ESP_ERR_TIMEOUT;
-    }
-
-    if (bytes_written) {
-        *bytes_written = len;
-    }
-<<<<<<< HEAD
->>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
-=======
->>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
     return ESP_OK;
 }
 
 esp_err_t driver_uart_read(uint8_t *buf, size_t max_len, size_t *out_len, TickType_t timeout_ticks)
 {
-<<<<<<< HEAD
-<<<<<<< HEAD
     if (!s_inited || buf == NULL || max_len == 0 || out_len == NULL) 
     {
-=======
-    if (!s_inited || buf == NULL || max_len == 0 || out_len == NULL) {
->>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
-=======
-    if (!s_inited || buf == NULL || max_len == 0 || out_len == NULL) {
->>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
         return ESP_ERR_INVALID_ARG;
     }
 
     *out_len = 0;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
     if (s_rx_mux && xSemaphoreTake(s_rx_mux, portMAX_DELAY) == pdTRUE) 
     {
         size_t got = rx_ring_pop(buf, max_len);
@@ -547,24 +402,11 @@ esp_err_t driver_uart_read(uint8_t *buf, size_t max_len, size_t *out_len, TickTy
 
         if (got > 0) 
         {
-=======
-=======
->>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
-    if (s_rx_mux && xSemaphoreTake(s_rx_mux, portMAX_DELAY) == pdTRUE) {
-        size_t got = rx_ring_pop(buf, max_len);
-        xSemaphoreGive(s_rx_mux);
-        if (got > 0) {
-<<<<<<< HEAD
->>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
-=======
->>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
             *out_len = got;
             return ESP_OK;
         }
     }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
     if (timeout_ticks == 0) 
     {
         return ESP_ERR_TIMEOUT;
@@ -582,25 +424,6 @@ esp_err_t driver_uart_read(uint8_t *buf, size_t max_len, size_t *out_len, TickTy
 
         if (got > 0) 
         {
-=======
-=======
->>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
-    if (timeout_ticks == 0) {
-        return ESP_ERR_TIMEOUT;
-    }
-
-    if (xSemaphoreTake(s_rx_data_sem, timeout_ticks) != pdTRUE) {
-        return ESP_ERR_TIMEOUT;
-    }
-
-    if (s_rx_mux && xSemaphoreTake(s_rx_mux, portMAX_DELAY) == pdTRUE) {
-        size_t got = rx_ring_pop(buf, max_len);
-        xSemaphoreGive(s_rx_mux);
-        if (got > 0) {
-<<<<<<< HEAD
->>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
-=======
->>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
             *out_len = got;
             return ESP_OK;
         }
@@ -612,8 +435,6 @@ esp_err_t driver_uart_read(uint8_t *buf, size_t max_len, size_t *out_len, TickTy
 size_t driver_uart_rx_available(void)
 {
     size_t n = 0;
-<<<<<<< HEAD
-<<<<<<< HEAD
 
     if (!s_inited || s_rx_mux == NULL) 
     {
@@ -626,27 +447,11 @@ size_t driver_uart_rx_available(void)
         xSemaphoreGive(s_rx_mux);
     }
 
-=======
-=======
->>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
-    if (!s_inited || s_rx_mux == NULL) {
-        return 0;
-    }
-    if (xSemaphoreTake(s_rx_mux, portMAX_DELAY) == pdTRUE) {
-        n = rx_ring_used();
-        xSemaphoreGive(s_rx_mux);
-    }
-<<<<<<< HEAD
->>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
-=======
->>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
     return n;
 }
 
 void driver_uart_flush_rx(void)
 {
-<<<<<<< HEAD
-<<<<<<< HEAD
     if (!s_inited) 
     {
         return;
@@ -655,51 +460,21 @@ void driver_uart_flush_rx(void)
 
     if (s_rx_mux && xSemaphoreTake(s_rx_mux, portMAX_DELAY) == pdTRUE) 
     {
-=======
-=======
->>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
-    if (!s_inited) {
-        return;
-    }
-    uart_flush_input(UART0_PORT_NUM);
-    if (s_rx_mux && xSemaphoreTake(s_rx_mux, portMAX_DELAY) == pdTRUE) {
-<<<<<<< HEAD
->>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
-=======
->>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
         s_rx_head = 0;
         s_rx_tail = 0;
         xSemaphoreGive(s_rx_mux);
     }
-<<<<<<< HEAD
-<<<<<<< HEAD
 
-=======
->>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
-=======
->>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
     rx_sem_drain();
 }
 
 esp_err_t driver_uart_set_rx_callback(driver_uart_rx_cb_t cb, void *user_ctx)
 {
-<<<<<<< HEAD
-<<<<<<< HEAD
     if (!s_inited) 
     {
         return ESP_ERR_INVALID_STATE;
     }
     
-=======
-    if (!s_inited) {
-        return ESP_ERR_INVALID_STATE;
-    }
->>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
-=======
-    if (!s_inited) {
-        return ESP_ERR_INVALID_STATE;
-    }
->>>>>>> 5c0939b1a3ae63d96b8bb499f5e2b674e3bfe0bf
     s_rx_cb = cb;
     s_rx_cb_ctx = user_ctx;
     return ESP_OK;
