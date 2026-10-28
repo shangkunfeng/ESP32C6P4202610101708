@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __SD_TF_CONFIG_H__
+#define __SD_TF_CONFIG_H__
 
 /**
  * JC1060P470C / JC-ESP32P4-M3 — TF Card（MicroSD）硬件参数
@@ -120,3 +121,5 @@
 #define TF_HISTORY_SUB_HUMI         "humi"
 #define TF_HISTORY_SUB_SPEED        "speed"
 #define TF_HISTORY_FALLBACK_FILE    "latest.bin"
+
+#endif

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __DISPLAY_CONFIG_H__
+#define __DISPLAY_CONFIG_H__
 
 /**
  * JC1060P470C / JC-ESP32P4-M3 显示参数（仅屏，不含触摸）
@@ -41,3 +42,5 @@
 
 #define MIPI_DSI_PHY_LDO_CHAN       3
 #define MIPI_DSI_PHY_LDO_MV         2500
+
+#endif

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __TOUCH_CONFIG_H__
+#define __TOUCH_CONFIG_H__
 
 #include "display_config.h"
 
@@ -15,3 +16,5 @@
 
 /* 松手时水平位移超过该值才切图（像素，越小越灵敏；原 1/5 屏约 204，现 1/10 约 102） */
 #define TP_SWIPE_COMMIT_PX        (LCD_H_RES / 10)
+
+#endif

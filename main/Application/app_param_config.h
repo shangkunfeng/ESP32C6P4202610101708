@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __APP_PARAM_CONFIG_H__
+#define __APP_PARAM_CONFIG_H__
 
 #include "esp_err.h"
 
@@ -26,4 +27,6 @@ esp_err_t param_config_remove_user_file(void);
 
 #ifdef __cplusplus
 }
+#endif
+
 #endif

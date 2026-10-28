@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __UART_CONFIG_H__
+#define __UART_CONFIG_H__
 
 /**
  * UART0 引脚与默认串口参数（JC1060P470C / 用户排针）
@@ -41,3 +42,5 @@
 #define UART0_RX_BUF_SIZE           1024
 #define UART0_TX_BUF_SIZE           1024
 #define UART0_QUEUE_DEPTH           0
+
+#endif
