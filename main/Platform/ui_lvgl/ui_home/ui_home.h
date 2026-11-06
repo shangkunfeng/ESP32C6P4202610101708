@@ -29,6 +29,7 @@ typedef struct {
     lv_obj_t *bg_img;
 
     lv_obj_t *lbl_time;
+    lv_obj_t *img_network;
     lv_obj_t *img_wifi;
     lv_obj_t *lbl_mode;
     lv_obj_t *lbl_footer_alarm;

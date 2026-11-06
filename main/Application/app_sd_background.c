@@ -26,11 +26,13 @@ static uint16_t *s_ui_home_back;
 static uint16_t *s_ui_home;
 static uint16_t *s_wifi_no_link;
 static uint16_t *s_wifi_link;
+static uint16_t *s_network_icon;
 static bool s_ui_login_ready;
 static bool s_ui_home_back_ready;
 static bool s_ui_home_ready;
 static bool s_wifi_no_link_ready;
 static bool s_wifi_link_ready;
+static bool s_network_icon_ready;
 
 static void log_dir(const char *dir_path)
 {
@@ -87,6 +89,12 @@ static void path_for_wifi_link(char *path, size_t path_len)
              TF_VFS_MOUNT_POINT, TF_IMAGES_DIR_NAME, TF_WIFI_LINK_FILE);
 }
 
+static void path_for_network_icon(char *path, size_t path_len)
+{
+    snprintf(path, path_len, "%s/%s/%s",
+             TF_VFS_MOUNT_POINT, TF_IMAGES_DIR_NAME, TF_NETWORK_ICON_FILE);
+}
+
 static uint16_t *alloc_frame_psram(const char *label)
 {
     uint16_t *p = heap_caps_aligned_alloc(FRAME_PSRAM_ALIGN, FRAME_BYTES,
@@ -126,11 +134,16 @@ static void free_background_psram(void)
         heap_caps_free(s_wifi_link);
         s_wifi_link = NULL;
     }
+    if (s_network_icon) {
+        heap_caps_free(s_network_icon);
+        s_network_icon = NULL;
+    }
     s_ui_login_ready = false;
     s_ui_home_back_ready = false;
     s_ui_home_ready = false;
     s_wifi_no_link_ready = false;
     s_wifi_link_ready = false;
+    s_network_icon_ready = false;
 }
 
 static uint16_t *alloc_icon_psram(const char *label)
@@ -321,6 +334,16 @@ esp_err_t app_sd_background_load_psram(void)
         s_wifi_link = NULL;
     }
 
+    path_for_network_icon(path, sizeof(path));
+    s_network_icon = alloc_icon_psram("network");
+    if (s_network_icon && load_icon_bin_from_sd(path, s_network_icon) == ESP_OK) {
+        s_network_icon_ready = true;
+        ESP_LOGI(TAG, "cached %s -> PSRAM %p", path, (void *)s_network_icon);
+    } else if (s_network_icon) {
+        heap_caps_free(s_network_icon);
+        s_network_icon = NULL;
+    }
+
     ESP_LOGI(TAG, "ui_login + ui_home_back + ui_home in PSRAM (%u bytes/frame)",
              (unsigned)FRAME_BYTES);
     return ESP_OK;
@@ -369,4 +392,12 @@ const uint16_t *app_sd_background_get_wifi_link_rgb565(void)
         return NULL;
     }
     return s_wifi_link;
+}
+
+const uint16_t *app_sd_background_get_network_rgb565(void)
+{
+    if (!s_network_icon_ready || !s_network_icon) {
+        return NULL;
+    }
+    return s_network_icon;
 }

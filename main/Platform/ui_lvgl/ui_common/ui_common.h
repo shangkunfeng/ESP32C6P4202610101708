@@ -10,7 +10,7 @@ extern "C" {
 #include <stdbool.h>
 
 /**
- * 界面切换：ui_init() 时一次性预创建 login/home/mode/wifi/trend/alarm/param 共 UI_SCR_COUNT 个屏，
+ * 界面切换：ui_init() 时一次性预创建 login/home/mode/wifi/network/trend/alarm/param 共 UI_SCR_COUNT 个屏，
  * 运行期间对象树常驻，ui_change_screen* 仅 lv_screen_load + 事件回调，不销毁界面。
  */
 
@@ -19,6 +19,7 @@ typedef enum {
     UI_SCR_ui_home,
     UI_SCR_ui_mode,
     UI_SCR_ui_wifi,
+    UI_SCR_ui_network,
     UI_SCR_ui_trend,
     UI_SCR_ui_alarm,
     UI_SCR_ui_param,

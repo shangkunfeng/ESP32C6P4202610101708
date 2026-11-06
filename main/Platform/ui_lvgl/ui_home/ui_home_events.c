@@ -618,6 +618,19 @@ static void home_btn_mode_cb(lv_event_t *e)
     ui_change_screen(UI_SCR_ui_mode);
 }
 
+static void home_btn_network_cb(lv_event_t *e)
+{
+    if (lv_event_get_code(e) != LV_EVENT_CLICKED) {
+        return;
+    }
+    ui_home_t *ui = lv_event_get_user_data(e);
+    if (ui) {
+        ui_home_events_dismiss_popups(ui);
+    }
+    ESP_LOGI(TAG, "open ui_network");
+    ui_change_screen(UI_SCR_ui_network);
+}
+
 static void home_btn_wifi_cb(lv_event_t *e)
 {
     if (lv_event_get_code(e) != LV_EVENT_CLICKED) {
@@ -859,6 +872,9 @@ void ui_home_events_register(ui_home_t *ui)
     }
     if (ui->btn_alarm) {
         lv_obj_add_event_cb(ui->btn_alarm, home_btn_alarm_cb, LV_EVENT_CLICKED, ui);
+    }
+    if (ui->img_network) {
+        lv_obj_add_event_cb(ui->img_network, home_btn_network_cb, LV_EVENT_CLICKED, ui);
     }
     if (ui->img_wifi) {
         lv_obj_add_event_cb(ui->img_wifi, home_btn_wifi_cb, LV_EVENT_CLICKED, ui);

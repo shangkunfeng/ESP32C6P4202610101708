@@ -78,8 +78,11 @@
 #define TF_WIFI_ICON_BYTES          (TF_WIFI_ICON_W * TF_WIFI_ICON_H * 2u)
 /** PSRAM/cache：分配与 msync 须按 128B 行对齐（800B 图标 → 896B） */
 #define TF_WIFI_ICON_PSRAM_BYTES    (((TF_WIFI_ICON_BYTES) + 127u) / 128u * 128u)
+/** 工控主监控标题栏 network.bin 显示边长（源图 20×20） */
+#define TF_HOME_NETWORK_ICON_DISPLAY    36
 #define TF_WIFI_NO_LINK_FILE        "wifi_no_link.bin"
 #define TF_WIFI_LINK_FILE           "wifi_link.bin"
+#define TF_NETWORK_ICON_FILE        "network.bin"
 
 /** 登录界面全屏背景（photo 目录，RGB565 全屏 1024x600） */
 #define TF_UI_LOGIN_FILE            "ui_login.bin"

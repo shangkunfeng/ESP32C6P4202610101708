@@ -23,7 +23,7 @@
  * 若板子与 PC 都接同一路由器 LAN（192.168.2.x）：
  *   APP_ETH_USE_STATIC_IP=0 用 DHCP，或静态 192.168.2.123 / gw 192.168.2.7
  */
-#define APP_ETH_USE_STATIC_IP       1
+#define APP_ETH_USE_STATIC_IP       0
 #define APP_ETH_STATIC_IP           "192.168.50.2"
 #define APP_ETH_STATIC_GW           "192.168.50.1"
 #define APP_ETH_STATIC_NETMASK      "255.255.255.0"

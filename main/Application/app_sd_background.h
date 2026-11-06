@@ -23,10 +23,12 @@ const uint16_t *app_sd_background_get_ui_home_back_rgb565(void);
 
 const uint16_t *app_sd_background_get_ui_home_rgb565(void);
 
-/** SD /sdcard/images/wifi_*.bin（20×20 RGB565），未加载则 NULL */
+/** SD /sdcard/images/wifi_*.bin、network.bin（20×20 RGB565），未加载则 NULL */
 const uint16_t *app_sd_background_get_wifi_no_link_rgb565(void);
 
 const uint16_t *app_sd_background_get_wifi_link_rgb565(void);
+
+const uint16_t *app_sd_background_get_network_rgb565(void);
 
 #ifdef __cplusplus
 }

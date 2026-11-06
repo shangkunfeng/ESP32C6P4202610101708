@@ -18,8 +18,9 @@ LV_FONT_DECLARE(ui_font_home_22);
 
 static lv_image_dsc_t s_home_wifi_no_link_dsc;
 static lv_image_dsc_t s_home_wifi_link_dsc;
+static lv_image_dsc_t s_home_network_dsc;
 
-static bool home_wifi_fill_icon_dsc(lv_image_dsc_t *dsc, const uint16_t *px)
+static bool home_icon_fill_dsc(lv_image_dsc_t *dsc, const uint16_t *px)
 {
     if (!dsc || !px) {
         return false;
@@ -54,10 +55,22 @@ void ui_home_refresh_wifi_icon(ui_home_t *ui)
         px = app_sd_background_get_wifi_no_link_rgb565();
         dsc = &s_home_wifi_no_link_dsc;
     }
-    if (!px || !dsc || !home_wifi_fill_icon_dsc(dsc, px)) {
+    if (!px || !dsc || !home_icon_fill_dsc(dsc, px)) {
         return;
     }
     lv_image_set_src(ui->img_wifi, dsc);
+}
+
+static void ui_home_set_network_icon(ui_home_t *ui)
+{
+    if (!ui || !ui->img_network) {
+        return;
+    }
+    const uint16_t *px = app_sd_background_get_network_rgb565();
+    if (!px || !home_icon_fill_dsc(&s_home_network_dsc, px)) {
+        return;
+    }
+    lv_image_set_src(ui->img_network, &s_home_network_dsc);
 }
 LV_FONT_DECLARE(lv_font_montserrat_28);
 LV_FONT_DECLARE(lv_font_montserrat_14);
@@ -186,6 +199,7 @@ static void style_title_row(lv_obj_t *row)
 
 static void create_header_overlay(lv_obj_t *screen, ui_home_t *ui)
 {
+    ui->img_network = NULL;
     ui->img_wifi = NULL;
 
     lv_obj_t *title_row = lv_obj_create(screen);
@@ -193,12 +207,22 @@ static void create_header_overlay(lv_obj_t *screen, ui_home_t *ui)
     style_title_row(title_row);
     lv_obj_set_size(title_row, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
 
-    /* 与底图「工控主监控」同字体占位，WiFi 图标紧挨其右侧（文字本身透明，不叠字） */
+    /* 与底图「工控主监控」同字体占位；network 在 WiFi 图标左侧（flex 顺序） */
     lv_obj_t *lbl_title = lv_label_create(title_row);
     lv_label_set_text(lbl_title, "工控主监控");
     lv_obj_set_style_text_font(lbl_title, &ui_font_home_22, LV_PART_MAIN);
     lv_obj_set_style_text_opa(lbl_title, LV_OPA_TRANSP, LV_PART_MAIN);
     lv_obj_set_style_bg_opa(lbl_title, LV_OPA_TRANSP, LV_PART_MAIN);
+
+    if (app_sd_background_get_network_rgb565()) {
+        ui->img_network = lv_image_create(title_row);
+        lv_obj_set_size(ui->img_network, TF_HOME_NETWORK_ICON_DISPLAY, TF_HOME_NETWORK_ICON_DISPLAY);
+        lv_image_set_scale(ui->img_network,
+                           (uint32_t)TF_HOME_NETWORK_ICON_DISPLAY * 256u / (uint32_t)TF_WIFI_ICON_W);
+        lv_obj_set_clickable(ui->img_network, true);
+        lv_obj_set_ext_click_area(ui->img_network, 8);
+        ui_home_set_network_icon(ui);
+    }
 
     if (app_sd_background_get_wifi_no_link_rgb565()) {
         ui->img_wifi = lv_image_create(title_row);
@@ -519,6 +543,7 @@ void ui_home_destroy(ui_home_t *ui)
         ui->screen = NULL;
         ui->bg_img = NULL;
         ui->lbl_time = NULL;
+        ui->img_network = NULL;
         ui->img_wifi = NULL;
         ui->lbl_mode = NULL;
         ui->lbl_footer_alarm = NULL;

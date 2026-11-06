@@ -27,6 +27,12 @@ list(APPEND UI_LVGL_SRCS
 list(APPEND UI_LVGL_INCLUDES "Platform/ui_lvgl/ui_wifi")
 
 list(APPEND UI_LVGL_SRCS
+    "Platform/ui_lvgl/ui_network/ui_network.c"
+    "Platform/ui_lvgl/ui_network/ui_network_events.c"
+)
+list(APPEND UI_LVGL_INCLUDES "Platform/ui_lvgl/ui_network")
+
+list(APPEND UI_LVGL_SRCS
     "Platform/ui_lvgl/ui_trend/ui_trend.c"
     "Platform/ui_lvgl/ui_trend/ui_trend_events.c"
 )

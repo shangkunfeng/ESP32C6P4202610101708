@@ -11,6 +11,7 @@
 #include "ui_home_events.h"
 #include "ui_mode.h"
 #include "ui_wifi.h"
+#include "ui_network.h"
 #include "ui_trend.h"
 #include "ui_alarm.h"
 #include "ui_alarm_events.h"
@@ -39,6 +40,8 @@ static const char *ui_screen_name(ui_screen_id_t id)
         return "ui_mode";
     case UI_SCR_ui_wifi:
         return "ui_wifi";
+    case UI_SCR_ui_network:
+        return "ui_network";
     case UI_SCR_ui_trend:
         return "ui_trend";
     case UI_SCR_ui_alarm:
@@ -54,6 +57,7 @@ static ui_login_t s_ui_login;
 static ui_home_t s_ui_home;
 static ui_mode_t s_ui_mode;
 static ui_wifi_t s_ui_wifi;
+static ui_network_t s_ui_network;
 static ui_trend_t s_ui_trend;
 static ui_alarm_t s_ui_alarm;
 static ui_param_t s_ui_param;
@@ -227,6 +231,15 @@ static void ui_wifi_screen_create(void)
     ui_wifi_create(&s_ui_wifi, &s_ui_home_dsc);
 }
 
+static void ui_network_screen_create(void)
+{
+    ensure_ui_home_dsc();
+    if (s_ui_network.screen) {
+        return;
+    }
+    ui_network_create(&s_ui_network, &s_ui_home_dsc);
+}
+
 static void ui_trend_screen_create(void)
 {
     ensure_ui_home_dsc();
@@ -259,6 +272,7 @@ static const ui_screen_fn_t s_create_fn[UI_SCR_COUNT] = {
     ui_home_screen_create,
     ui_mode_screen_create,
     ui_wifi_screen_create,
+    ui_network_screen_create,
     ui_trend_screen_create,
     ui_alarm_screen_create,
     ui_param_screen_create,
@@ -269,6 +283,7 @@ static lv_obj_t **const s_root[UI_SCR_COUNT] = {
     &s_ui_home.screen,
     &s_ui_mode.screen,
     &s_ui_wifi.screen,
+    &s_ui_network.screen,
     &s_ui_trend.screen,
     &s_ui_alarm.screen,
     &s_ui_param.screen,
@@ -409,6 +424,9 @@ static void ui_change_screen_impl(ui_screen_id_t id, bool refr_now)
     if (s_current == UI_SCR_ui_wifi && id != UI_SCR_ui_wifi) {
         ui_wifi_on_screen_leave(&s_ui_wifi);
     }
+    if (s_current == UI_SCR_ui_network && id != UI_SCR_ui_network) {
+        ui_network_on_screen_leave(&s_ui_network);
+    }
 
     s_current = id;
     ESP_LOGI(TAG, "lv_screen_load %p", (void *)*s_root[id]);
@@ -433,6 +451,9 @@ static void ui_change_screen_impl(ui_screen_id_t id, bool refr_now)
     }
     if (id == UI_SCR_ui_wifi) {
         ui_wifi_on_screen_active(&s_ui_wifi);
+    }
+    if (id == UI_SCR_ui_network) {
+        ui_network_on_screen_active(&s_ui_network);
     }
     if (refr_now) {
         lv_refr_now(NULL);
