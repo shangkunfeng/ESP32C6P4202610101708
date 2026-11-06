@@ -1,7 +1,7 @@
 ﻿/*******************************************************************************
  * Size: 16 px
  * Bpp: 4
- * Opts: --bpp 4 --size 16 --no-compress --no-prefilter --font C:\Windows\Fonts\simhei.ttf -r 0x20-0x7F --symbols 工控主监当前用户：程师权限时间温度湿转速风机加热器排气阀设备状态门运行开停止关故障启动手自趋势查看报警记录参数置退出登模式中未确认℃/实曲线历史值秒待接入放大缩小纵轴横制位压力闭环目标上下阈保存进读取写重默返回最定精零偏告超传感类型消仅输字清除删分钟差高低积PID序号年月日代码信息一页跳第浓通断卡滞过载响应到震升不足缺水堵指令体异常讯等级发生次请选择增减为空播暂画无资源按调节可在由操作员干预谨慎。，扫描连网络密名称已附近失败稍候 --format lvgl -o C:\Users\Administrator\Desktop\ESP32C6P4202610190914\ESP32C6P4202610101708\main\Platform\ui_lvgl\ui_home\fonts\ui_font_home_16.c --force-fast-kern-format
+ * Opts: --bpp 4 --size 16 --no-compress --no-prefilter --font C:\Windows\Fonts\simhei.ttf -r 0x20-0x7F --symbols 工控主监当前用户：程师权限时间温度湿转速风机加热器排气阀设备状态门运行开停止关故障启动手自趋势查看报警记录参数置退出登模式中未确认℃/实曲线历史值秒待接入放大缩小纵轴横制位压力闭环目标上下阈保存进读取写重默返回最定精零偏告超传感类型消仅输字清除删分钟差高低积PID序号年月日代码信息一页跳第浓通断卡滞过载响应到震升不足缺水堵指令体异常讯等级发生次请选择增减为空播暂画无资源按调节可在由操作员干预谨慎。，扫描连网络密名称已附近失败稍候有线网址成功正在 --lv-fallback lv_font_source_han_sans_sc_16_cjk --format lvgl
  ******************************************************************************/
 
 #ifdef __has_include
@@ -4583,6 +4583,10 @@ static lv_font_fmt_txt_dsc_t font_dsc = {
  *----------------*/
 
 /*Initialize a public general font descriptor*/
+#if LV_VERSION_CHECK(8, 2, 0) || LVGL_VERSION_MAJOR >= 9
+LV_FONT_DECLARE(lv_font_source_han_sans_sc_16_cjk);
+#endif
+
 #if LVGL_VERSION_MAJOR >= 8
 const lv_font_t ui_font_home_16 = {
 #else
@@ -4601,7 +4605,7 @@ lv_font_t ui_font_home_16 = {
 #endif
     .dsc = &font_dsc,          /*The custom font data. Will be accessed by `get_glyph_bitmap/dsc` */
 #if LV_VERSION_CHECK(8, 2, 0) || LVGL_VERSION_MAJOR >= 9
-    .fallback = NULL,
+    .fallback = &lv_font_source_han_sans_sc_16_cjk,
 #endif
     .user_data = NULL,
 };

@@ -64,6 +64,7 @@ idf_component_register(
         "Application/app_wifi.c"
         "Application/app_eth.c"
         "Application/app_network_url_probe.c"
+        "Application/app_network_hmi.c"
         "Application/app_mic.c"
         "Application/app_uart1_plot.c"
         "Board/board_display.c"

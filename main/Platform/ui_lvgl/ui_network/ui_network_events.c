@@ -41,15 +41,27 @@ static void network_ta_event_cb(lv_event_t *e)
     }
 }
 
-static void network_probe_done_cb(void *user_data, bool success, int http_status)
+static void network_probe_done_cb(void *user_data,
+                                  bool success,
+                                  int http_status,
+                                  const app_network_hmi_view_t *hmi,
+                                  bool hmi_parsed)
 {
     ui_network_t *ui = user_data;
     (void)http_status;
     if (!ui) {
         return;
     }
-    ESP_LOGI(TAG, "probe done success=%d status=%d", success ? 1 : 0, http_status);
+    ESP_LOGI(TAG, "probe done success=%d status=%d hmi=%d", success ? 1 : 0, http_status, hmi_parsed ? 1 : 0);
     ui_network_show_probe_result(ui, success);
+    if (!success) {
+        return;
+    }
+    if (hmi_parsed && hmi) {
+        ui_network_show_hmi_panel(ui, hmi);
+    } else {
+        ui_network_show_hmi_parse_hint(ui);
+    }
 }
 
 static void network_btn_login_cb(lv_event_t *e)
@@ -76,6 +88,7 @@ static void network_btn_login_cb(lv_event_t *e)
     }
 
     ui_network_set_probe_busy(ui, true);
+    ui_network_clear_hmi_panel(ui);
     esp_err_t err = app_network_url_probe_start(url, network_probe_done_cb, ui);
     if (err != ESP_OK) {
         ESP_LOGW(TAG, "probe start: %s", esp_err_to_name(err));

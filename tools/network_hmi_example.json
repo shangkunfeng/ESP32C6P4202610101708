@@ -1,0 +1,12 @@
+{
+  "title": "工控 HMI 示例",
+  "lines": [
+    "服务器连接正常",
+    "数据刷新: 登录时拉取"
+  ],
+  "items": [
+    {"label": "CO2", "value": "800 ppm"},
+    {"label": "温度", "value": "24.5 C"},
+    {"label": "转速", "value": "1200 rpm"}
+  ]
+}

@@ -150,6 +150,94 @@ void ui_network_set_probe_busy(ui_network_t *ui, bool busy)
     }
 }
 
+void ui_network_clear_hmi_panel(ui_network_t *ui)
+{
+    if (!ui || !ui->panel_hmi) {
+        return;
+    }
+    if (ui->lbl_hmi_title) {
+        lv_label_set_text(ui->lbl_hmi_title, "");
+        lv_obj_set_hidden(ui->lbl_hmi_title, true);
+    }
+    if (ui->lbl_hmi_hint) {
+        lv_label_set_text(ui->lbl_hmi_hint, "登录成功后显示服务器界面");
+        lv_obj_set_style_text_color(ui->lbl_hmi_hint, lv_color_hex(COL_MUTED), LV_PART_MAIN);
+        lv_obj_set_hidden(ui->lbl_hmi_hint, false);
+    }
+    for (size_t i = 0; i < APP_NETWORK_HMI_LINE_MAX; i++) {
+        if (ui->lbl_hmi_lines[i]) {
+            lv_label_set_text(ui->lbl_hmi_lines[i], "");
+            lv_obj_set_hidden(ui->lbl_hmi_lines[i], true);
+        }
+    }
+    for (size_t i = 0; i < APP_NETWORK_HMI_ITEM_MAX; i++) {
+        if (ui->lbl_hmi_items[i]) {
+            lv_label_set_text(ui->lbl_hmi_items[i], "");
+            lv_obj_set_hidden(ui->lbl_hmi_items[i], true);
+        }
+    }
+}
+
+void ui_network_show_hmi_parse_hint(ui_network_t *ui)
+{
+    if (!ui) {
+        return;
+    }
+    ui_network_clear_hmi_panel(ui);
+    if (ui->lbl_hmi_hint) {
+        lv_label_set_text(ui->lbl_hmi_hint, "登录成功，响应非 HMI JSON");
+        lv_obj_set_style_text_color(ui->lbl_hmi_hint, lv_color_hex(COL_MUTED), LV_PART_MAIN);
+    }
+}
+
+void ui_network_show_hmi_panel(ui_network_t *ui, const app_network_hmi_view_t *view)
+{
+    if (!ui || !view) {
+        return;
+    }
+
+    ui_network_clear_hmi_panel(ui);
+    if (ui->lbl_hmi_hint) {
+        lv_obj_set_hidden(ui->lbl_hmi_hint, true);
+    }
+
+    int y = 0;
+    if (view->title[0] != '\0' && ui->lbl_hmi_title) {
+        lv_label_set_text(ui->lbl_hmi_title, view->title);
+        style_status_label(ui->lbl_hmi_title);
+        lv_obj_align(ui->lbl_hmi_title, LV_ALIGN_TOP_LEFT, 0, y);
+        lv_obj_set_hidden(ui->lbl_hmi_title, false);
+        y += 28;
+    }
+
+    for (size_t i = 0; i < view->line_count && i < APP_NETWORK_HMI_LINE_MAX; i++) {
+        lv_obj_t *lbl = ui->lbl_hmi_lines[i];
+        if (!lbl) {
+            continue;
+        }
+        lv_label_set_text(lbl, view->lines[i]);
+        style_body_label(lbl);
+        lv_obj_set_width(lbl, LV_PCT(100));
+        lv_label_set_long_mode(lbl, LV_LABEL_LONG_WRAP);
+        lv_obj_align(lbl, LV_ALIGN_TOP_LEFT, 0, y);
+        lv_obj_set_hidden(lbl, false);
+        y += 26;
+    }
+
+    for (size_t i = 0; i < view->item_count && i < APP_NETWORK_HMI_ITEM_MAX; i++) {
+        lv_obj_t *lbl = ui->lbl_hmi_items[i];
+        if (!lbl) {
+            continue;
+        }
+        lv_label_set_text_fmt(lbl, "%s：%s", view->items[i].label, view->items[i].value);
+        style_body_label(lbl);
+        lv_obj_set_width(lbl, LV_PCT(100));
+        lv_obj_align(lbl, LV_ALIGN_TOP_LEFT, 0, y);
+        lv_obj_set_hidden(lbl, false);
+        y += 26;
+    }
+}
+
 void ui_network_show_probe_result(ui_network_t *ui, bool success)
 {
     if (!ui || !ui->lbl_result) {
@@ -161,6 +249,7 @@ void ui_network_show_probe_result(ui_network_t *ui, bool success)
     } else {
         lv_label_set_text(ui->lbl_result, "登录失败");
         lv_obj_set_style_text_color(ui->lbl_result, lv_color_hex(COL_FAIL), LV_PART_MAIN);
+        ui_network_clear_hmi_panel(ui);
     }
     ui_network_set_probe_busy(ui, false);
 }
@@ -221,7 +310,7 @@ void ui_network_create(ui_network_t *ui, const lv_image_dsc_t *bg)
     lv_obj_align(ui->lbl_ip, LV_ALIGN_TOP_LEFT, 0, 36);
 
     ui->panel_url = lv_obj_create(ui->screen);
-    lv_obj_set_size(ui->panel_url, LCD_H_RES - 80, 168);
+    lv_obj_set_size(ui->panel_url, LCD_H_RES - 80, 148);
     lv_obj_align(ui->panel_url, LV_ALIGN_TOP_MID, 0, 156);
     style_panel(ui->panel_url);
     lv_obj_set_style_pad_all(ui->panel_url, 16, LV_PART_MAIN);
@@ -245,7 +334,35 @@ void ui_network_create(ui_network_t *ui, const lv_image_dsc_t *bg)
     ui->lbl_result = lv_label_create(ui->panel_url);
     lv_label_set_text(ui->lbl_result, "");
     style_body_label(ui->lbl_result);
-    lv_obj_align(ui->lbl_result, LV_ALIGN_TOP_LEFT, 0, 96);
+    lv_obj_align(ui->lbl_result, LV_ALIGN_TOP_LEFT, 0, 92);
+
+    ui->panel_hmi = lv_obj_create(ui->screen);
+    lv_obj_set_size(ui->panel_hmi, LCD_H_RES - 80, 200);
+    lv_obj_align(ui->panel_hmi, LV_ALIGN_TOP_MID, 0, 308);
+    style_panel(ui->panel_hmi);
+    lv_obj_set_style_pad_all(ui->panel_hmi, 14, LV_PART_MAIN);
+    lv_obj_set_scrollable(ui->panel_hmi, true);
+    lv_obj_set_scroll_dir(ui->panel_hmi, LV_DIR_VER);
+
+    ui->lbl_hmi_title = lv_label_create(ui->panel_hmi);
+    lv_obj_set_width(ui->lbl_hmi_title, LV_PCT(100));
+    lv_obj_set_hidden(ui->lbl_hmi_title, true);
+
+    ui->lbl_hmi_hint = lv_label_create(ui->panel_hmi);
+    lv_label_set_text(ui->lbl_hmi_hint, "登录成功后显示服务器界面");
+    style_body_label(ui->lbl_hmi_hint);
+    lv_obj_set_width(ui->lbl_hmi_hint, LV_PCT(100));
+    lv_label_set_long_mode(ui->lbl_hmi_hint, LV_LABEL_LONG_WRAP);
+    lv_obj_align(ui->lbl_hmi_hint, LV_ALIGN_TOP_LEFT, 0, 0);
+
+    for (size_t i = 0; i < APP_NETWORK_HMI_LINE_MAX; i++) {
+        ui->lbl_hmi_lines[i] = lv_label_create(ui->panel_hmi);
+        lv_obj_set_hidden(ui->lbl_hmi_lines[i], true);
+    }
+    for (size_t i = 0; i < APP_NETWORK_HMI_ITEM_MAX; i++) {
+        ui->lbl_hmi_items[i] = lv_label_create(ui->panel_hmi);
+        lv_obj_set_hidden(ui->lbl_hmi_items[i], true);
+    }
 
     ui->keyboard = lv_keyboard_create(ui->screen);
     lv_obj_set_size(ui->keyboard, LCD_H_RES, 200);
@@ -278,6 +395,7 @@ void ui_network_create(ui_network_t *ui, const lv_image_dsc_t *bg)
     lv_obj_move_foreground(title_row);
     lv_obj_move_foreground(ui->panel_status);
     lv_obj_move_foreground(ui->panel_url);
+    lv_obj_move_foreground(ui->panel_hmi);
     lv_obj_move_foreground(ui->panel_bar);
     lv_obj_move_foreground(ui->keyboard);
 
