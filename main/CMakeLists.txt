@@ -63,6 +63,7 @@ idf_component_register(
         "Application/app_lvgl.c"
         "Application/app_wifi.c"
         "Application/app_eth.c"
+        "Application/app_network_url_probe.c"
         "Application/app_mic.c"
         "Application/app_uart1_plot.c"
         "Board/board_display.c"
@@ -138,5 +139,6 @@ idf_component_register(
         esp_netif
         esp_eth
         esp_event
+        esp_http_client
         esp_hosted
     )

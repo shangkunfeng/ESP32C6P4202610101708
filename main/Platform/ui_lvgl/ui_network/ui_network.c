@@ -19,6 +19,12 @@ static lv_image_dsc_t s_network_icon_dsc;
 #define COL_CYAN   0x5EDFFF
 #define COL_WHITE  0xF0F8FF
 #define COL_MUTED  0xC8D8E8
+#define COL_OK     0x3DDC84
+#define COL_FAIL   0xFF6B6B
+
+static const char s_url_input_chars[] =
+    "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    ":/?#[]@!$&'()*+,;=%.-_~";
 
 static void style_screen(lv_obj_t *screen)
 {
@@ -58,6 +64,27 @@ static void style_tool_btn(lv_obj_t *btn)
     lv_obj_set_style_border_width(btn, 1, LV_PART_MAIN);
     lv_obj_set_style_radius(btn, 8, LV_PART_MAIN);
     lv_obj_set_style_bg_opa(btn, LV_OPA_80, LV_PART_MAIN);
+}
+
+static void style_primary_btn(lv_obj_t *btn)
+{
+    lv_obj_set_style_bg_color(btn, lv_color_hex(0x1E6FD9), LV_PART_MAIN);
+    lv_obj_set_style_bg_grad_color(btn, lv_color_hex(0x0E4FA8), LV_PART_MAIN);
+    lv_obj_set_style_bg_grad_dir(btn, LV_GRAD_DIR_VER, LV_PART_MAIN);
+    lv_obj_set_style_border_color(btn, lv_color_hex(0x5EDFFF), LV_PART_MAIN);
+    lv_obj_set_style_border_width(btn, 2, LV_PART_MAIN);
+    lv_obj_set_style_radius(btn, 8, LV_PART_MAIN);
+    lv_obj_set_style_bg_opa(btn, LV_OPA_80, LV_PART_MAIN);
+}
+
+static void style_url_ta(lv_obj_t *ta)
+{
+    lv_obj_set_style_radius(ta, 8, LV_PART_MAIN);
+    lv_obj_set_style_bg_color(ta, lv_color_hex(0xF5F8FC), LV_PART_MAIN);
+    lv_obj_set_style_text_color(ta, lv_color_hex(0x1A2A3A), LV_PART_MAIN);
+    lv_obj_set_style_text_font(ta, &ui_font_home_22, LV_PART_MAIN);
+    lv_obj_set_style_pad_left(ta, 12, LV_PART_MAIN);
+    lv_obj_set_style_pad_right(ta, 12, LV_PART_MAIN);
 }
 
 static lv_obj_t *create_text_btn(lv_obj_t *parent, const char *text)
@@ -105,6 +132,39 @@ void ui_network_refresh_status(ui_network_t *ui)
     }
 }
 
+void ui_network_set_probe_busy(ui_network_t *ui, bool busy)
+{
+    if (!ui || !ui->lbl_result) {
+        return;
+    }
+    if (busy) {
+        lv_label_set_text(ui->lbl_result, "正在连接...");
+        lv_obj_set_style_text_color(ui->lbl_result, lv_color_hex(COL_MUTED), LV_PART_MAIN);
+    }
+    if (ui->btn_login) {
+        if (busy) {
+            lv_obj_add_state(ui->btn_login, LV_STATE_DISABLED);
+        } else {
+            lv_obj_remove_state(ui->btn_login, LV_STATE_DISABLED);
+        }
+    }
+}
+
+void ui_network_show_probe_result(ui_network_t *ui, bool success)
+{
+    if (!ui || !ui->lbl_result) {
+        return;
+    }
+    if (success) {
+        lv_label_set_text(ui->lbl_result, "登录成功");
+        lv_obj_set_style_text_color(ui->lbl_result, lv_color_hex(COL_OK), LV_PART_MAIN);
+    } else {
+        lv_label_set_text(ui->lbl_result, "登录失败");
+        lv_obj_set_style_text_color(ui->lbl_result, lv_color_hex(COL_FAIL), LV_PART_MAIN);
+    }
+    ui_network_set_probe_busy(ui, false);
+}
+
 void ui_network_create(ui_network_t *ui, const lv_image_dsc_t *bg)
 {
     if (!ui) {
@@ -146,7 +206,7 @@ void ui_network_create(ui_network_t *ui, const lv_image_dsc_t *bg)
     }
 
     ui->panel_status = lv_obj_create(ui->screen);
-    lv_obj_set_size(ui->panel_status, LCD_H_RES - 80, 108);
+    lv_obj_set_size(ui->panel_status, LCD_H_RES - 80, 88);
     lv_obj_align(ui->panel_status, LV_ALIGN_TOP_MID, 0, 58);
     style_panel(ui->panel_status);
     lv_obj_set_style_pad_all(ui->panel_status, 16, LV_PART_MAIN);
@@ -158,7 +218,42 @@ void ui_network_create(ui_network_t *ui, const lv_image_dsc_t *bg)
 
     ui->lbl_ip = lv_label_create(ui->panel_status);
     style_body_label(ui->lbl_ip);
-    lv_obj_align(ui->lbl_ip, LV_ALIGN_TOP_LEFT, 0, 40);
+    lv_obj_align(ui->lbl_ip, LV_ALIGN_TOP_LEFT, 0, 36);
+
+    ui->panel_url = lv_obj_create(ui->screen);
+    lv_obj_set_size(ui->panel_url, LCD_H_RES - 80, 168);
+    lv_obj_align(ui->panel_url, LV_ALIGN_TOP_MID, 0, 156);
+    style_panel(ui->panel_url);
+    lv_obj_set_style_pad_all(ui->panel_url, 16, LV_PART_MAIN);
+    lv_obj_set_scrollable(ui->panel_url, false);
+
+    ui->lbl_url_hint = lv_label_create(ui->panel_url);
+    lv_label_set_text(ui->lbl_url_hint, "网址");
+    style_status_label(ui->lbl_url_hint);
+    lv_obj_align(ui->lbl_url_hint, LV_ALIGN_TOP_LEFT, 0, 0);
+
+    ui->ta_url = lv_textarea_create(ui->panel_url);
+    lv_obj_set_size(ui->ta_url, LV_PCT(100), 52);
+    lv_obj_align(ui->ta_url, LV_ALIGN_TOP_LEFT, 0, 32);
+    lv_textarea_set_one_line(ui->ta_url, true);
+    lv_textarea_set_max_length(ui->ta_url, 127);
+    lv_textarea_set_accepted_chars(ui->ta_url, s_url_input_chars);
+    lv_textarea_set_placeholder_text(ui->ta_url, "http://www.example.com");
+    lv_textarea_set_text(ui->ta_url, "http://www.baidu.com");
+    style_url_ta(ui->ta_url);
+
+    ui->lbl_result = lv_label_create(ui->panel_url);
+    lv_label_set_text(ui->lbl_result, "");
+    style_body_label(ui->lbl_result);
+    lv_obj_align(ui->lbl_result, LV_ALIGN_TOP_LEFT, 0, 96);
+
+    ui->keyboard = lv_keyboard_create(ui->screen);
+    lv_obj_set_size(ui->keyboard, LCD_H_RES, 200);
+    lv_obj_align(ui->keyboard, LV_ALIGN_BOTTOM_MID, 0, -88);
+    lv_keyboard_set_mode(ui->keyboard, LV_KEYBOARD_MODE_TEXT_LOWER);
+    lv_obj_set_hidden(ui->keyboard, true);
+    lv_obj_set_style_bg_color(ui->keyboard, lv_color_hex(0x142840), LV_PART_MAIN);
+    lv_obj_set_style_bg_opa(ui->keyboard, LV_OPA_COVER, LV_PART_MAIN);
 
     ui->panel_bar = lv_obj_create(ui->screen);
     lv_obj_set_size(ui->panel_bar, LCD_H_RES, 88);
@@ -169,15 +264,22 @@ void ui_network_create(ui_network_t *ui, const lv_image_dsc_t *bg)
     lv_obj_set_style_pad_all(ui->panel_bar, 8, LV_PART_MAIN);
     lv_obj_set_flex_flow(ui->panel_bar, LV_FLEX_FLOW_ROW);
     lv_obj_set_flex_align(ui->panel_bar, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
+    lv_obj_set_style_pad_column(ui->panel_bar, 24, LV_PART_MAIN);
     lv_obj_set_scrollable(ui->panel_bar, false);
 
     ui->btn_back = create_text_btn(ui->panel_bar, "返回");
     lv_obj_set_size(ui->btn_back, 160, 56);
     style_tool_btn(ui->btn_back);
 
+    ui->btn_login = create_text_btn(ui->panel_bar, "登录");
+    lv_obj_set_size(ui->btn_login, 160, 56);
+    style_primary_btn(ui->btn_login);
+
     lv_obj_move_foreground(title_row);
     lv_obj_move_foreground(ui->panel_status);
+    lv_obj_move_foreground(ui->panel_url);
     lv_obj_move_foreground(ui->panel_bar);
+    lv_obj_move_foreground(ui->keyboard);
 
     ui_network_refresh_status(ui);
     ui_network_events_register(ui);
@@ -199,7 +301,7 @@ void ui_network_on_screen_active(ui_network_t *ui)
 
 void ui_network_on_screen_leave(ui_network_t *ui)
 {
-    (void)ui;
+    ui_network_events_on_screen_leave(ui);
 }
 
 void ui_network_destroy(ui_network_t *ui)
